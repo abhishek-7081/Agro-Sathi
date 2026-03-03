@@ -1,0 +1,9 @@
+node_modules/
+.vite/
+*.log
+zExtra
+docker-compose.yml
+dist/
+build/
+.env
+.DS_Store
