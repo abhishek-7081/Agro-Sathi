@@ -9,5 +9,38 @@ build/
 .DS_Store
 frontend/
 # backend/
-src/
+# src/
 # scripts/
+config/
+controllers/
+# models/
+routes/
+middleware/
+jobs/
+utils/
+services/
+validations/
+
+
+
+
+
+
+
+views/
+tests/
+
+
+
+
+
+
+# *.env
+*.env.local
+*.env.development
+*.env.test
+*.env.production
+.idea/
+.vscode/
+*.sublime-project
+
