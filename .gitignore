@@ -5,15 +5,10 @@ zExtra
 docker-compose.yml
 dist/
 build/
-# .env
 .DS_Store
 frontend/
-# backend/
-# src/
-# scripts/
 config/
 controllers/
-# models/
 routes/
 middleware/
 jobs/
