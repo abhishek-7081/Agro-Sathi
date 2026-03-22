@@ -6,7 +6,7 @@ docker-compose.yml
 dist/
 build/
 .DS_Store
-frontend/
+# frontend/
 config/
 controllers/
 routes/
