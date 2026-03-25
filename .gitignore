@@ -1,7 +1,7 @@
 node_modules/
 .vite/
 *.log
-# zExtra
+zExtra/
 docker-compose.yml
 dist/
 build/
