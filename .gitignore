@@ -1,7 +1,7 @@
 node_modules/
 .vite/
 *.log
-zExtra
+# zExtra
 docker-compose.yml
 dist/
 build/
@@ -16,19 +16,8 @@ utils/
 services/
 validations/
 
-
-
-
-
-
-
 views/
 tests/
-
-
-
-
-
 
 # *.env
 *.env.local
