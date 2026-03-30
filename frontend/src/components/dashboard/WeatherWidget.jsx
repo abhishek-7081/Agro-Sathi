@@ -3,12 +3,12 @@ import { useTranslation } from 'react-i18next';
 import { getWeather } from '../../services/weather.service';
 import { Cloud, Sun, CloudRain } from 'lucide-react';
 
-export default function WeatherWidget({ location }) {
+export default function WeatherWidget({ lat, lon }) {
   const { t } = useTranslation();
   const [weather, setWeather] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [coords, setCoords] = useState(location); // start with prop if provided
+  const [coords, setCoords] = useState({ lat, lon }); // start with props
 
   const fetchForCoords = (lat, lon) => {
     setLoading(true);
@@ -54,12 +54,12 @@ export default function WeatherWidget({ location }) {
     }
   };
 
-  // if location prop changes (e.g. user profile loaded), update coords
+  // if location prop changes, update coords
   useEffect(() => {
-    if (location?.lat && location?.lon) {
-      setCoords(location);
+    if (lat && lon) {
+      setCoords({ lat, lon });
     }
-  }, [location]);
+  }, [lat, lon]);
 
   useEffect(() => {
     if (coords?.lat && coords?.lon) {

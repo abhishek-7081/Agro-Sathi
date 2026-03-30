@@ -33,6 +33,7 @@ const getMockForecast = (lat, lon) => {
       condition: conditions[Math.floor(Math.random() * conditions.length)],
       humidity: 60 + Math.floor(Math.random() * 20),
       windSpeed: Math.round(10 + Math.random() * 10),
+      pressure: 1013 + Math.floor(Math.random() * 10),
       rainChance: Math.floor(Math.random() * 30),
     };
   });
@@ -137,6 +138,7 @@ exports.getForecast = async (lat, lon) => {
             condition: item.weather[0].main,
             humidity: item.main.humidity,
             windSpeed: Math.round(item.wind.speed * 3.6),
+            pressure: item.main.pressure || 1013,
             rainChance: item.pop ? Math.round(item.pop * 100) : 0,
             items: []
           };
@@ -151,6 +153,7 @@ exports.getForecast = async (lat, lon) => {
         condition: day.condition,
         humidity: day.humidity,
         windSpeed: day.windSpeed,
+        pressure: day.pressure || 1013,
         rainChance: day.rainChance,
       }));
 

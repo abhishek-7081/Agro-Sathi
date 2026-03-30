@@ -132,7 +132,7 @@ export default function Dashboard() {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <WeatherWidget location={{ lat: user?.latitude, lon: user?.longitude }} />
+              <WeatherWidget lat={user?.latitude} lon={user?.longitude} />
             </CardContent>
           </Card>
 
