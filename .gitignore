@@ -6,14 +6,15 @@ docker-compose.yml
 dist/
 build/
 .DS_Store
-# frontend/
+
 config/
 controllers/
 routes/
 middleware/
 jobs/
-utils/
-services/
+
+
+
 validations/
 
 views/
