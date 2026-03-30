@@ -7,18 +7,6 @@ dist/
 build/
 .DS_Store
 
-controllers/
-
-
-jobs/
-
-
-
-validations/
-
-views/
-tests/
-
 # *.env
 *.env.local
 *.env.development
