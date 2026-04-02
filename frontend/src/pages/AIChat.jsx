@@ -15,8 +15,7 @@ export default function AIChat() {
   const chatContainerRef = useRef(null);
   const prevLengthRef = useRef(0);
 
-  if (!user) {  
-    
+  if (!user) {
     return <Navigate to="/login" replace />;
   }
 
