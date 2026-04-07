@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Send } from 'lucide-react';
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from '../../hooks/useTranslation';
 
 export default function ChatInput({ onSend, disabled }) {
   const { t } = useTranslation();
