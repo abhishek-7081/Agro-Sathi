@@ -69,7 +69,7 @@ export default function Dashboard() {
                   <div className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${feature.color} flex items-center justify-center mb-6 text-white shadow-lg group-hover:scale-110 group-hover:rotate-3 transition-all duration-500`}>
                     <Icon size={28} strokeWidth={1.5} />
                   </div>
-                  <h3 className="text-xl font-bold text-soil-dark mb-3 tracking-tight group-hover:text-primary-600 transition-colors uppercase text-sm">{feature.title}</h3>
+                  <h3 className="text-sm font-bold text-soil-dark mb-3 tracking-tight group-hover:text-primary-600 transition-colors uppercase">{feature.title}</h3>
                   <p className="text-slate-500 leading-relaxed font-medium">{feature.desc}</p>
                 </div>
               );
