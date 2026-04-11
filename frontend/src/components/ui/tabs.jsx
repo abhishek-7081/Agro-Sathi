@@ -2,11 +2,11 @@ import { useState, createContext, useContext } from 'react';
 
 const TabsContext = createContext(null);
 
-export function Tabs({ defaultValue, children }) {
+export function Tabs({ defaultValue, children, className = '' }) {
   const [activeTab, setActiveTab] = useState(defaultValue);
   return (
     <TabsContext.Provider value={{ activeTab, setActiveTab }}>
-      <div>{children}</div>
+      <div className={className}>{children}</div>
     </TabsContext.Provider>
   );
 }
@@ -23,7 +23,9 @@ export function TabsTrigger({ value, children, className = '' }) {
       type="button"
       onClick={() => ctx?.setActiveTab?.(value)}
       data-state={isActive ? 'active' : 'inactive'}
-      className={`px-4 py-2 font-medium transition-colors ${className}`}
+      className={`px-4 py-2 font-medium transition-colors ${
+        isActive ? 'bg-primary-600 text-white shadow-sm' : 'theme-subtle'
+      } ${className}`}
     >
       {children}
     </button>

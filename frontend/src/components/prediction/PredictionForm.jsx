@@ -1,121 +1,233 @@
-import { useState } from "react";
-import { Button } from "../ui/button";
-import { Input } from "../ui/input";
-import { Label } from "../ui/label";
-import { Card, CardContent } from "../ui/card";
-import { useTranslation } from "../../hooks/useTranslation";
-import { ChevronRight, Sprout } from "lucide-react";
+import { useMemo, useRef, useState } from 'react';
+import { ImagePlus, ChevronRight, ScanLine, Sprout, ClipboardList } from 'lucide-react';
+import { Button } from '../ui/button';
+import { Input } from '../ui/input';
+import { Label } from '../ui/label';
+import { Card, CardContent } from '../ui/card';
+import { useTranslation } from '../../hooks/useTranslation';
 
 export default function PredictionForm({ onSubmit, loading }) {
-    const { t } = useTranslation();
-    const [formData, setFormData] = useState({
-        cropType: "",
-        landArea: "",
-        soilType: "",
-    });
+  const { t } = useTranslation();
+  const fileInputRef = useRef(null);
+  const [formData, setFormData] = useState({
+    cropType: '',
+    landArea: '',
+    soilType: '',
+    growthStage: 'vegetative',
+    notes: '',
+    image: null,
+    imagePreview: '',
+  });
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        onSubmit(formData);
-    };
+  const summary = useMemo(
+    () => [
+      formData.cropType || 'Crop',
+      formData.growthStage || 'Stage',
+      formData.landArea ? `${formData.landArea} acres` : 'Field area',
+    ],
+    [formData.cropType, formData.growthStage, formData.landArea]
+  );
 
-    return (
-        <div className="space-y-12">
-            <Card className="max-w-xl mx-auto border-none shadow-premium-xl rounded-[40px] overflow-hidden bg-white/90 backdrop-blur-md">
-                <CardContent className="p-10 md:p-14">
-                    <form onSubmit={handleSubmit} className="space-y-8">
-                        <div className="flex flex-col items-center text-center mb-10">
-                            <div className="w-16 h-16 rounded-2xl bg-primary-50 flex items-center justify-center mb-6 text-primary-600">
-                                <Sprout size={32} />
-                            </div>
-                            <h2 className="text-2xl font-black text-soil-dark tracking-tighter uppercase">
-                                {t('prediction.form_title')}
-                            </h2>
-                            <p className="text-slate-500 font-medium text-sm mt-2">{t('prediction.form_subtitle')}</p>
-                        </div>
+  const handleImageChange = (event) => {
+    const file = event.target.files?.[0];
 
-                        <div className="space-y-6">
-                            <div className="space-y-3">
-                                <Label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">{t('prediction.crop_type')}</Label>
-                                <select
-                                    className="w-full h-14 rounded-2xl border-slate-100 bg-slate-50 px-6 py-2 text-sm font-bold text-soil-dark focus:border-primary-500 focus:bg-white focus:ring-4 focus:ring-primary-500/10 transition-all appearance-none outline-none shadow-sm"
-                                    value={formData.cropType}
-                                    onChange={(e) => setFormData({ ...formData, cropType: e.target.value })}
-                                    required
-                                >
-                                    <option value="" disabled>{t('prediction.select_crop')}</option>
-                                    <option value="wheat">{t('prediction.crops.wheat')}</option>
-                                    <option value="rice">{t('prediction.crops.rice')}</option>
-                                    <option value="maize">{t('prediction.crops.maize')}</option>
-                                    <option value="sugarcane">{t('prediction.crops.sugarcane')}</option>
-                                    <option value="cotton">{t('prediction.crops.cotton')}</option>
-                                </select>
-                            </div>
+    if (!file) {
+      setFormData((prev) => ({ ...prev, image: null, imagePreview: '' }));
+      return;
+    }
 
-                            <div className="space-y-3">
-                                <Label htmlFor="landArea" className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">
-                                    {t('prediction.land_area')} (Acres)
-                                </Label>
-                                <Input
-                                    id="landArea"
-                                    type="number"
-                                    placeholder={t('prediction.enter_land_area')}
-                                    className="h-14 rounded-2xl border-slate-100 bg-slate-50 px-6 font-bold text-soil-dark focus:bg-white shadow-sm"
-                                    value={formData.landArea}
-                                    onChange={(e) => setFormData({ ...formData, landArea: e.target.value })}
-                                    required
-                                    min="0.1"
-                                    step="0.1"
-                                />
-                            </div>
+    const previewUrl = URL.createObjectURL(file);
+    setFormData((prev) => ({ ...prev, image: file, imagePreview: previewUrl }));
+  };
 
-                            <div className="space-y-3">
-                                <Label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">{t('prediction.soil_type')}</Label>
-                                <select
-                                    className="w-full h-14 rounded-2xl border-slate-100 bg-slate-50 px-6 py-2 text-sm font-bold text-soil-dark focus:border-primary-500 focus:bg-white focus:ring-4 focus:ring-primary-500/10 transition-all appearance-none outline-none shadow-sm"
-                                    value={formData.soilType}
-                                    onChange={(e) => setFormData({ ...formData, soilType: e.target.value })}
-                                    required
-                                >
-                                    <option value="" disabled>{t('prediction.select_soil')}</option>
-                                    <option value="loamy">{t('prediction.soils.loamy')}</option>
-                                    <option value="sandy">{t('prediction.soils.sandy')}</option>
-                                    <option value="clayey">{t('prediction.soils.clayey')}</option>
-                                    <option value="silty">{t('prediction.soils.silty')}</option>
-                                    <option value="peaty">{t('prediction.soils.peaty')}</option>
-                                </select>
-                            </div>
-                        </div>
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    onSubmit(formData);
+  };
 
-                        <button
-                            type="submit"
-                            className="btn-premium w-full h-14 bg-primary-600 text-white shadow-agri hover:shadow-agri-lg flex items-center justify-center gap-2 group mt-4 overflow-hidden"
-                            disabled={loading || !formData.cropType || !formData.landArea || !formData.soilType}
-                        >
-                            <span className="relative z-10 transition-transform group-hover:translate-x-1">
-                                {loading ? t('prediction.predicting') : t('prediction.predict_button')}
-                            </span>
-                            {!loading && <ChevronRight size={18} className="relative z-10 transition-transform group-hover:translate-x-1" />}
-                            {loading && <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />}
-                        </button>
-                    </form>
-                </CardContent>
-            </Card>
-
-            <div className="max-w-2xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-6 pb-12">
-                <div className="p-8 rounded-[40px] bg-white border border-slate-100 shadow-premium-lg">
-                    <h4 className="text-sm font-black text-soil-dark uppercase tracking-widest mb-4 border-l-4 border-primary-600 pl-4">How it works</h4>
-                    <p className="text-slate-500 text-sm font-medium leading-relaxed">
-                        Our AI analyzes historical data and soil profiles to estimate your crop yield for the upcoming season.
-                    </p>
+  return (
+    <div className="grid gap-8 lg:grid-cols-[1.1fr_0.9fr]">
+      <Card className="rounded-[32px] border-none shadow-premium-xl overflow-hidden">
+        <CardContent className="p-6 md:p-8">
+          <form onSubmit={handleSubmit} className="space-y-8">
+            <div className="grid gap-8 lg:grid-cols-[0.92fr_1.08fr]">
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-[11px] font-black uppercase tracking-[0.18em] theme-subtle">Image Sample</p>
+                    <h2 className="mt-1 text-xl font-black uppercase tracking-[0.12em] theme-heading">Leaf or Crop Photo</h2>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => fileInputRef.current?.click()}
+                    className="theme-button-secondary inline-flex items-center gap-2 rounded-full px-4 py-2 text-xs font-black uppercase tracking-[0.16em]"
+                  >
+                    <ImagePlus size={14} />
+                    Upload
+                  </button>
                 </div>
-                <div className="p-8 rounded-[40px] bg-white border border-slate-100 shadow-premium-lg">
-                    <h4 className="text-sm font-black text-soil-dark uppercase tracking-widest mb-4 border-l-4 border-primary-600 pl-4">Precision Guarantee</h4>
-                    <p className="text-slate-500 text-sm font-medium leading-relaxed">
-                        Data is aggregated from over 500+ regional test beds to provide highly localized estimates.
-                    </p>
+
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept="image/*"
+                  className="hidden"
+                  onChange={handleImageChange}
+                />
+
+                <button
+                  type="button"
+                  onClick={() => fileInputRef.current?.click()}
+                  className="theme-panel-muted flex min-h-[300px] w-full flex-col items-center justify-center rounded-[28px] border border-dashed theme-border p-6 text-center transition-all hover:scale-[1.01]"
+                >
+                  {formData.imagePreview ? (
+                    <img
+                      src={formData.imagePreview}
+                      alt="Crop preview"
+                      className="h-[260px] w-full rounded-[22px] object-cover shadow-premium-lg"
+                    />
+                  ) : (
+                    <>
+                      <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-3xl bg-primary-600 text-white shadow-agri">
+                        <ScanLine size={28} />
+                      </div>
+                      <p className="text-sm font-black uppercase tracking-[0.16em] theme-heading">Drop a crop photo here</p>
+                      <p className="mt-2 max-w-xs text-sm leading-6 theme-subtle">
+                        Upload a leaf or canopy image to make the diagnosis flow more useful and visually guided.
+                      </p>
+                    </>
+                  )}
+                </button>
+              </div>
+
+              <div className="space-y-5">
+                <div className="grid gap-5 md:grid-cols-2">
+                  <div className="space-y-2">
+                    <Label className="text-[10px] font-black uppercase tracking-[0.18em] theme-subtle">{t('prediction.crop_type')}</Label>
+                    <select
+                      className="theme-input h-12 w-full rounded-2xl px-4 text-sm font-bold"
+                      value={formData.cropType}
+                      onChange={(e) => setFormData({ ...formData, cropType: e.target.value })}
+                      required
+                    >
+                      <option value="" disabled>{t('prediction.select_crop')}</option>
+                      <option value="wheat">{t('prediction.crops.wheat')}</option>
+                      <option value="rice">{t('prediction.crops.rice')}</option>
+                      <option value="maize">{t('prediction.crops.maize')}</option>
+                      <option value="sugarcane">{t('prediction.crops.sugarcane')}</option>
+                      <option value="cotton">{t('prediction.crops.cotton')}</option>
+                    </select>
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label className="text-[10px] font-black uppercase tracking-[0.18em] theme-subtle">Growth Stage</Label>
+                    <select
+                      className="theme-input h-12 w-full rounded-2xl px-4 text-sm font-bold"
+                      value={formData.growthStage}
+                      onChange={(e) => setFormData({ ...formData, growthStage: e.target.value })}
+                    >
+                      <option value="vegetative">Vegetative</option>
+                      <option value="flowering">Flowering</option>
+                      <option value="grain-filling">Grain Filling</option>
+                      <option value="harvest-ready">Harvest Ready</option>
+                    </select>
+                  </div>
                 </div>
+
+                <div className="grid gap-5 md:grid-cols-2">
+                  <div className="space-y-2">
+                    <Label htmlFor="landArea" className="text-[10px] font-black uppercase tracking-[0.18em] theme-subtle">
+                      {t('prediction.land_area')} (Acres)
+                    </Label>
+                    <Input
+                      id="landArea"
+                      type="number"
+                      min="0.1"
+                      step="0.1"
+                      placeholder={t('prediction.enter_land_area')}
+                      value={formData.landArea}
+                      onChange={(e) => setFormData({ ...formData, landArea: e.target.value })}
+                      required
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label className="text-[10px] font-black uppercase tracking-[0.18em] theme-subtle">{t('prediction.soil_type')}</Label>
+                    <select
+                      className="theme-input h-12 w-full rounded-2xl px-4 text-sm font-bold"
+                      value={formData.soilType}
+                      onChange={(e) => setFormData({ ...formData, soilType: e.target.value })}
+                      required
+                    >
+                      <option value="" disabled>{t('prediction.select_soil')}</option>
+                      <option value="loamy">{t('prediction.soils.loamy')}</option>
+                      <option value="sandy">{t('prediction.soils.sandy')}</option>
+                      <option value="clayey">{t('prediction.soils.clayey')}</option>
+                      <option value="silty">{t('prediction.soils.silty')}</option>
+                      <option value="peaty">{t('prediction.soils.peaty')}</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <Label className="text-[10px] font-black uppercase tracking-[0.18em] theme-subtle">Field Notes</Label>
+                  <textarea
+                    rows={5}
+                    className="theme-input w-full rounded-[22px] px-4 py-3 text-sm font-medium"
+                    placeholder="Describe discoloration, wilting, pest signs, or irrigation concerns."
+                    value={formData.notes}
+                    onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
+                  />
+                </div>
+              </div>
             </div>
+
+            <div className="theme-panel-muted flex flex-col gap-4 rounded-[28px] p-5 md:flex-row md:items-center md:justify-between">
+              <div className="flex items-start gap-3">
+                <div className="mt-1 flex h-10 w-10 items-center justify-center rounded-2xl bg-primary-600 text-white">
+                  <ClipboardList size={18} />
+                </div>
+                <div>
+                  <p className="text-[10px] font-black uppercase tracking-[0.18em] theme-subtle">Prediction Summary</p>
+                  <p className="mt-1 text-sm font-semibold theme-heading">{summary.join(' • ')}</p>
+                </div>
+              </div>
+
+              <Button
+                type="submit"
+                className="min-w-[220px] rounded-full px-6 py-3 text-xs uppercase tracking-[0.18em]"
+                disabled={loading || !formData.cropType || !formData.landArea || !formData.soilType}
+              >
+                {loading ? t('prediction.predicting') : t('prediction.predict_button')}
+                {!loading && <ChevronRight size={16} />}
+              </Button>
+            </div>
+          </form>
+        </CardContent>
+      </Card>
+
+      <div className="grid gap-5">
+        <div className="theme-panel rounded-[28px] p-6 shadow-premium-lg">
+          <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-primary-600 text-white">
+            <Sprout size={20} />
+          </div>
+          <h3 className="text-sm font-black uppercase tracking-[0.16em] theme-heading">What You’ll Get</h3>
+          <ul className="mt-4 space-y-3 text-sm leading-6 theme-subtle">
+            <li>Instant yield estimate based on crop, field size, and soil context.</li>
+            <li>Image-assisted disease hinting with a confidence score for triage.</li>
+            <li>Next-step recommendations you can act on right away.</li>
+          </ul>
         </div>
-    );
+
+        <div className="theme-panel rounded-[28px] p-6 shadow-premium-lg">
+          <h3 className="text-sm font-black uppercase tracking-[0.16em] theme-heading">Best Upload Tips</h3>
+          <ul className="mt-4 space-y-3 text-sm leading-6 theme-subtle">
+            <li>Use daylight and keep one affected area clearly visible.</li>
+            <li>Avoid blurry images or shadows covering the leaf surface.</li>
+            <li>Add field notes if symptoms started after weather changes or spraying.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  );
 }

@@ -190,7 +190,7 @@ export const enFlat = {
   "footer.privacy_policy": "Privacy Policy",
   "footer.terms_of_service": "Terms of Service",
   "footer.empower_note": "Empowering farmers with intelligent agricultural solutions",
-  "footer.built_with_love": "Built with ❤️ for farmers",
+  "footer.built_with_love": "Built with ❤️ by Abhishek Tripathi for farmers",
   "footer.copyright": "© 2025 Smart Agricultural Intelligence Platform. All rights reserved.",
 
   // Prediction

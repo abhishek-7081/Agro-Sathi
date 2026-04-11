@@ -5,6 +5,7 @@ export function Badge({ children, variant = 'default', className = '' }) {
     danger: 'bg-gradient-to-r from-red-100 to-orange-100 text-red-700 border border-red-200',
     warning: 'bg-gradient-to-r from-yellow-100 to-amber-100 text-yellow-700 border border-yellow-200',
     info: 'bg-gradient-to-r from-blue-100 to-cyan-100 text-blue-700 border border-blue-200',
+    outline: 'bg-white/80 text-primary-700 border border-primary-200',
   };
 
   return (

@@ -10,7 +10,7 @@ export function Card({ children, className = '' }) {
 
 export function CardHeader({ children, className = '' }) {
   return (
-    <div className={`border-b border-primary-100/60 bg-white/50 px-6 py-4 ${className}`}>
+    <div className={`border-b theme-border theme-surface-soft px-6 py-4 ${className}`}>
       {children}
     </div>
   );
@@ -19,7 +19,7 @@ export function CardHeader({ children, className = '' }) {
 export function CardTitle({ children, className = '' }) {
   return (
     <h2
-      className={`font-heading text-lg font-bold bg-gradient-to-r from-primary-700 to-primary-600 bg-clip-text text-transparent ${className}`}
+      className={`font-heading text-lg font-bold theme-heading ${className}`}
     >
       {children}
     </h2>
@@ -33,7 +33,7 @@ export function CardContent({ children, className = '' }) {
 export function CardFooter({ children, className = '' }) {
   return (
     <div
-      className={`border-t border-primary-100/60 px-6 py-4 flex justify-end gap-2 bg-cream-50/50 ${className}`}
+      className={`border-t theme-border px-6 py-4 flex justify-end gap-2 theme-surface-soft ${className}`}
     >
       {children}
     </div>

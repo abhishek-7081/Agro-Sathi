@@ -3,19 +3,77 @@
 @tailwind utilities;
 
 @layer base {
-  body {
-    @apply antialiased transition-colors duration-300;
-  }
-  
-  html.light body {
-    @apply bg-cream-50 text-soil-dark;
-  }
-  
-  html.dark body {
-    @apply bg-soil-dark text-slate-100;
+  :root {
+    --app-bg: #f4f8f5;
+    --surface: rgba(255, 255, 255, 0.9);
+    --surface-strong: rgba(255, 255, 255, 0.96);
+    --surface-soft: rgba(255, 255, 255, 0.72);
+    --border: rgba(13, 115, 119, 0.14);
+    --text-main: #1f2937;
+    --text-strong: #10231c;
+    --text-muted: #5b6b65;
+    --brand: #1f8d53;
+    --brand-strong: #16623a;
+    --brand-soft: rgba(31, 141, 83, 0.12);
+    --brand-gradient: linear-gradient(135deg, #16623a 0%, #1f8d53 48%, #4aa96c 100%);
+    --shadow-rgb: 22, 98, 58;
+    --footer-bg: rgba(255, 255, 255, 0.88);
   }
 
-  html.theme-green body {
-    @apply bg-sage-50 text-soil-dark;
+  html.theme-green {
+    color-scheme: light;
+  }
+
+  html.theme-sky {
+    color-scheme: light;
+    --app-bg: #eef6ff;
+    --surface: rgba(255, 255, 255, 0.9);
+    --surface-strong: rgba(255, 255, 255, 0.97);
+    --surface-soft: rgba(255, 255, 255, 0.74);
+    --border: rgba(37, 99, 235, 0.15);
+    --text-main: #1f3a56;
+    --text-strong: #10253d;
+    --text-muted: #5a7189;
+    --brand: #2b7fff;
+    --brand-strong: #1f5fc7;
+    --brand-soft: rgba(43, 127, 255, 0.12);
+    --brand-gradient: linear-gradient(135deg, #1f5fc7 0%, #2b7fff 52%, #6cb6ff 100%);
+    --shadow-rgb: 31, 95, 199;
+    --footer-bg: rgba(245, 250, 255, 0.92);
+  }
+
+  html.theme-dark {
+    color-scheme: dark;
+    --app-bg: #06131a;
+    --surface: rgba(10, 23, 31, 0.88);
+    --surface-strong: rgba(7, 18, 26, 0.96);
+    --surface-soft: rgba(18, 37, 48, 0.72);
+    --border: rgba(148, 210, 189, 0.12);
+    --text-main: #d7e5ea;
+    --text-strong: #f4fbff;
+    --text-muted: #8ea6b2;
+    --brand: #2fb7a3;
+    --brand-strong: #1f8e7e;
+    --brand-soft: rgba(47, 183, 163, 0.15);
+    --brand-gradient: linear-gradient(135deg, #1f8e7e 0%, #2fb7a3 48%, #77d5ca 100%);
+    --shadow-rgb: 3, 10, 15;
+    --footer-bg: rgba(8, 20, 28, 0.94);
+  }
+
+  html {
+    background: var(--app-bg);
+  }
+
+  body {
+    @apply antialiased transition-colors duration-300;
+    background:
+      radial-gradient(circle at top left, rgba(var(--shadow-rgb), 0.14) 0%, transparent 32%),
+      radial-gradient(circle at bottom right, rgba(var(--shadow-rgb), 0.08) 0%, transparent 28%),
+      var(--app-bg);
+    color: var(--text-main);
+  }
+
+  * {
+    border-color: var(--border);
   }
 }

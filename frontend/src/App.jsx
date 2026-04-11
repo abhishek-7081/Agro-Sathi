@@ -5,7 +5,8 @@ import PageLoader from './components/ui/PageLoader';
 import { AuthProvider } from './context/AuthContext';
 import { LanguageProvider } from './context/LanguageContext';
 import { ThemeProvider } from './context/ThemeContext';
-import { ErrorBoundary } from './ErrorBoundary';
+import ErrorBoundary from './ErrorBoundary';
+import { ROUTE_ALIASES } from './lib/routes';
 
 const Dashboard = lazy(() => import('./pages/Dashboard'));
 const AIChat = lazy(() => import('./pages/AIChat'));
@@ -53,6 +54,9 @@ function AppContent() {
             <Route path="weather" element={<WeatherForecast />} />
             <Route path="*" element={<Navigate to="/" replace />} />
           </Route>
+          {Object.entries(ROUTE_ALIASES).map(([from, to]) => (
+            <Route key={from} path={from} element={<Navigate to={to} replace />} />
+          ))}
         </Routes>
       </Suspense>
     </BrowserRouter>

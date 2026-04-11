@@ -1,50 +1,48 @@
 // src/context/ThemeContext.jsx
-import { createContext, useState, useEffect } from 'react';
+import { createContext, useEffect, useMemo, useState } from 'react';
+
+export const APP_THEMES = [
+  { id: 'green', label: 'Green' },
+  { id: 'sky', label: 'Light Blue' },
+  { id: 'dark', label: 'Dark' },
+];
+
+const DEFAULT_THEME = 'green';
 
 export const ThemeContext = createContext({
-  theme: 'light',
+  theme: DEFAULT_THEME,
+  setTheme: () => {},
   toggleTheme: () => {},
+  themes: APP_THEMES,
 });
 
 export const ThemeProvider = ({ children }) => {
-  const [theme, setTheme] = useState(() => {
-    return localStorage.getItem('app-theme') || 'green';
-  });
+  const [theme, setTheme] = useState(() => localStorage.getItem('app-theme') || DEFAULT_THEME);
 
   useEffect(() => {
-    // Apply theme class to html element
     const root = document.documentElement;
-    root.classList.remove('light', 'dark', 'theme-green');
-    
-    // Add appropriate class
-    if (theme === 'green') {
-      root.classList.add('theme-green');
-      root.classList.remove('dark');
-    } else if (theme === 'dark') {
-      root.classList.add('dark');
-      root.classList.remove('theme-green');
-    } else {
-      root.classList.add('light');
-    }
-    
+    root.classList.remove('theme-green', 'theme-sky', 'theme-dark', 'dark', 'light');
+    root.classList.add(`theme-${theme}`);
+    root.classList.add(theme === 'dark' ? 'dark' : 'light');
+    root.dataset.theme = theme;
     localStorage.setItem('app-theme', theme);
   }, [theme]);
 
   const toggleTheme = () => {
-    setTheme((prev) => {
-      if (prev === 'light') return 'dark';
-      if (prev === 'dark') return 'green';
-      return 'light';
-    });
+    const currentIndex = APP_THEMES.findIndex((item) => item.id === theme);
+    const nextTheme = APP_THEMES[(currentIndex + 1) % APP_THEMES.length]?.id || DEFAULT_THEME;
+    setTheme(nextTheme);
   };
 
-  const setSpecificTheme = (newTheme) => {
-    setTheme(newTheme);
-  };
-
-  return (
-    <ThemeContext.Provider value={{ theme, toggleTheme, setSpecificTheme }}>
-      {children}
-    </ThemeContext.Provider>
+  const value = useMemo(
+    () => ({
+      theme,
+      setTheme,
+      toggleTheme,
+      themes: APP_THEMES,
+    }),
+    [theme]
   );
+
+  return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>;
 };

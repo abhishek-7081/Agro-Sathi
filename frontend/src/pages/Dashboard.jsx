@@ -8,6 +8,7 @@ import { Link } from 'react-router-dom';
 import { Button } from '../components/ui/button';
 import { TrendingUp, AlertCircle, Sprout, Wind, BarChart3, Calendar, Truck, DollarSign, MessageSquare } from 'lucide-react';
 import { useTranslation } from '../hooks/useTranslation';
+import { ROUTES } from '../lib/routes';
 
 export default function Dashboard() {
   const { user } = useAuth();
@@ -23,7 +24,8 @@ export default function Dashboard() {
         <div className="container mx-auto p-4 py-24 relative z-10">
           <section className="text-center mb-20 animate-fade-in-up">
             <div className="inline-block px-4 py-1.5 rounded-full bg-primary-100 text-primary-700 text-sm font-bold uppercase tracking-widest mb-6 animate-fade-in shadow-sm">
-                {t('common.platform_name', 'Agro-Sathi Platform')}
+                Agro-Sathi
+                {/* {t('common.platform_name', 'Agro-Sathi Platform')} */}
             </div>
             <h1 className="font-heading text-5xl md:text-7xl font-black mb-6 text-soil-dark leading-tight tracking-tighter">
               {t('dashboard.smart_agri_title')}
@@ -86,11 +88,13 @@ export default function Dashboard() {
               <div className="p-1 px-2.5 rounded-2xl bg-white border border-primary-100 shadow-agri w-fit backdrop-blur-sm">
                 <h1 className="text-2xl md:text-3xl font-black text-primary-800 tracking-tight">
                   {t('dashboard.welcome_farmer', { name: user?.fullName || 'Farmer' })}
+                  {/* {t('dashboard.welcome_farmer', { name: user?.fullName || 'Farmer' })} */}
                 </h1>
               </div>
               <div className="flex items-center gap-3">
                  <div className="px-4 py-2 bg-emerald-100 text-emerald-700 rounded-full text-xs font-bold border border-emerald-200 uppercase tracking-widest shadow-sm">
-                    {t('dashboard.live_updates', 'Live Updates')}
+                    {/* {t('dashboard.live_updates', 'Live Updates')} */}
+                  Live Updates
                  </div>
               </div>
            </div>
@@ -106,13 +110,13 @@ export default function Dashboard() {
            
            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7 gap-5">
               {[
-                { to: '/markets', icon: BarChart3, label: t('dashboard.view_prices'), color: 'bg-blue-50 text-blue-600 hover:bg-blue-100' },
-                { to: '/schemes', icon: Sprout, label: t('dashboard.browse_schemes'), color: 'bg-emerald-50 text-emerald-600 hover:bg-emerald-100' },
-                { to: '/ai-chat', icon: Wind, label: t('dashboard.ask_ai'), color: 'bg-indigo-50 text-indigo-600 hover:bg-indigo-100' },
-                { to: '/crop-calendar', icon: Calendar, label: t('dashboard.crop_calendar'), color: 'bg-amber-50 text-amber-600 hover:bg-amber-100' },
-                { to: '/shipments', icon: Truck, label: t('dashboard.track_shipments'), color: 'bg-slate-50 text-slate-600 hover:bg-slate-100' },
-                { to: '/profit-calculator', icon: DollarSign, label: t('dashboard.profit_calculator'), color: 'bg-rose-50 text-rose-600 hover:bg-rose-100' },
-                { to: '/community-forum', icon: MessageSquare, label: t('dashboard.community_forum'), color: 'bg-teal-50 text-teal-600 hover:bg-teal-100' },
+                { to: ROUTES.markets, icon: BarChart3, label: t('dashboard.view_prices'), color: 'bg-blue-50 text-blue-600 hover:bg-blue-100' },
+                { to: ROUTES.schemes, icon: Sprout, label: t('dashboard.browse_schemes'), color: 'bg-emerald-50 text-emerald-600 hover:bg-emerald-100' },
+                { to: ROUTES.chat, icon: Wind, label: t('dashboard.ask_ai'), color: 'bg-indigo-50 text-indigo-600 hover:bg-indigo-100' },
+                { to: ROUTES.calendar, icon: Calendar, label: t('dashboard.crop_calendar'), color: 'bg-amber-50 text-amber-600 hover:bg-amber-100' },
+                { to: ROUTES.shipments, icon: Truck, label: t('dashboard.track_shipments'), color: 'bg-slate-50 text-slate-600 hover:bg-slate-100' },
+                { to: ROUTES.calculator, icon: DollarSign, label: t('dashboard.profit_calculator'), color: 'bg-rose-50 text-rose-600 hover:bg-rose-100' },
+                { to: ROUTES.forum, icon: MessageSquare, label: t('dashboard.community_forum'), color: 'bg-teal-50 text-teal-600 hover:bg-teal-100' },
               ].map((action, i) => (
                 <Link
                   key={action.to}
