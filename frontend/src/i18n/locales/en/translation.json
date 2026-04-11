@@ -88,7 +88,32 @@
     "feature_schemes": "Schemes",
     "feature_schemes_desc": "Browse and apply for government schemes",
     "feature_ai": "AI Advisor",
-    "feature_ai_desc": "Get personalized farming advice"
+    "feature_ai_desc": "Get personalized farming advice",
+    "quick_actions": "Quick Actions",
+    "view_prices": "Market Prices",
+    "browse_schemes": "Government Schemes",
+    "ask_ai": "AI Advisor",
+    "crop_calendar": "Crop Calendar",
+    "track_shipments": "Track Shipments",
+    "profit_calculator": "Profit Calculator",
+    "community_forum": "Community Forum",
+    "view_all": "View All",
+    "features_title": "Platform Features",
+    "yield_prediction": "Yield Prediction",
+    "crop_market": "Crop Market",
+    "shipments": "Logistics & Shipments",
+    "profit_calc": "Profit Calculator",
+    "forum": "Farmer Community",
+    "voice": {
+      "title": "Voice Assistant",
+      "you": "You",
+      "assistant": "Assistant",
+      "processing": "Processing...",
+      "stop_and_send": "Stop & Send",
+      "tap_to_speak": "Tap to Speak",
+      "instruction": "Speak clearly for 2–3 seconds, then tap Stop. Ask about crops, weather, or schemes.",
+      "too_short": "Recording too short. Speak for 2–3 seconds."
+    }
   },
   "markets": {
     "title": "📊 Market Prices",

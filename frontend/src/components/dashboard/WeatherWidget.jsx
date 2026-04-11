@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from '../../hooks/useTranslation';
 import { getWeather } from '../../services/weather.service';
 import { Cloud, Sun, CloudRain } from 'lucide-react';
 

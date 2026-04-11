@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from '../hooks/useTranslation';
 import { getForecast } from '../services/weather.service';
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
 import { Badge } from '../components/ui/badge';
@@ -39,8 +39,7 @@ export default function WeatherForecast() {
       setLocationError(t('dashboard.location_not_available'));
       setLoading(false);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user]);
+  }, [user, t]);
 
   const loadForecast = async (lat, lon) => {
     try {
@@ -93,135 +92,106 @@ export default function WeatherForecast() {
     return Sun;
   };
 
-  const getWeatherColor = (condition) => {
-    const cond = condition.toLowerCase();
-    if (cond.includes('rain')) return 'from-blue-500 to-indigo-600';
-    if (cond.includes('cloud')) return 'from-gray-400 to-gray-600';
-    return 'from-yellow-400 to-orange-500';
-  };
+  if (loading) return (
+    <div className="min-h-screen flex items-center justify-center">
+      <Loader />
+    </div>
+  );
 
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <Loader />
+  if (!forecast) return (
+    <div className="min-h-screen bg-slate-50 py-8">
+      <div className="container mx-auto p-4">
+        <Card>
+          <CardContent className="py-12 text-center text-slate-500">
+            {locationError || t('dashboard.location_not_available')}
+          </CardContent>
+        </Card>
       </div>
-    );
-  }
-
-  if (!forecast) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50 py-8">
-        <div className="container mx-auto p-4">
-          <Card>
-            <CardContent className="py-12 text-center">
-              <p className="text-gray-600">
-                {locationError || t('dashboard.location_not_available')}
-                {!locationError && ` ${t('dashboard.try_current_location')}.`}
-              </p>
-            </CardContent>
-          </Card>
-        </div>
-      </div>
-    );
-  }
+    </div>
+  );
 
   const selectedForecast = forecast.forecast[selectedDay];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50 py-8">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-sky-50 py-8 animate-fade-in">
       <div className="container mx-auto p-4">
-        <style>{`
-          @keyframes slideInDown {
-            from { opacity: 0; transform: translateY(-30px); }
-            to { opacity: 1; transform: translateY(0); }
-          }
-          @keyframes fadeInStagger {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-          }
-          .page-header { animation: slideInDown 0.6s ease-out; }
-          .weather-card { animation: fadeInStagger 0.5s ease-out; }
-          .forecast-day { transition: transform 0.2s; }
-          .forecast-day:hover { transform: scale(1.03); }
-          .forecast-grid { display: grid; grid-template-columns: repeat(5,1fr); gap: 1rem; }
-          @media (max-width: 768px) {
-            .forecast-grid { grid-template-columns: repeat(3,1fr); overflow-x: auto; }
-          }
-          .details-grid { grid-auto-rows: minmax(100px, auto); }
-        `}</style>
-        <div className="mb-8 page-header">
-          <div className="flex items-center gap-3 mb-4">
-            <div className="p-3 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600">
-              <Cloud size={24} className="text-white" />
+        <div className="mb-8 animate-fade-in-up">
+          <div className="flex items-center gap-4 mb-4">
+            <div className="p-3.5 rounded-2xl bg-primary-600 shadow-agri">
+              <Cloud size={28} className="text-white" />
             </div>
             <div>
-              <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+              <h1 className="text-4xl md:text-5xl font-bold text-soil-dark tracking-tight">
                 🌤️ Weather Forecast
               </h1>
-              <p className="text-gray-600 text-lg">7-day weather forecast for {forecast.location}</p>
+              <p className="text-slate-500 text-lg font-medium">7-day forecast for {forecast.location}</p>
             </div>
           </div>
         </div>
 
-        {/* Current Weather */}
-        <Card className="mb-6 bg-gradient-to-br from-blue-500 to-indigo-600 text-black weather-card">
-          <CardContent className="pt-6">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div>
-                <p className="mb-2 font-semibold">Current Weather</p>
-                <div className="flex items-center gap-4">
-                  <div className="text-6xl font-bold">{forecast.current.temp}°C</div>
-                  <div>
-                    <p className="text-xl">{forecast.current.condition}</p>
-                    <p className="text-sm text-gray-800">{forecast.location}</p>
+        {/* Current Weather Card */}
+        <Card className="mb-8 overflow-hidden border-none shadow-premium-lg group hover:shadow-premium-xl transition-all duration-500 transform hover:-translate-y-1 bg-gradient-to-br from-primary-600 to-primary-800">
+          <CardContent className="p-8 text-white relative">
+             <div className="absolute top-0 right-0 p-8 opacity-10 group-hover:opacity-20 transition-opacity">
+                <Sun size={120} strokeWidth={1} />
+             </div>
+             
+             <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
+               <div className="lg:col-span-4">
+                  <p className="text-white/80 font-bold uppercase tracking-widest text-xs mb-3">Currently</p>
+                  <div className="flex items-baseline gap-2 mb-2">
+                    <span className="text-7xl font-bold tracking-tighter">{forecast.current.temp}°</span>
+                    <span className="text-2xl font-medium opacity-80">C</span>
                   </div>
-                </div>
-              </div>
-              <div className="flex items-center gap-6">
-                <div className="flex items-center gap-2">
-                  <Droplets size={24} />
-                  <div>
-                    <p className="text-sm text-black">Humidity</p>
-                    <p className="text-xl font-semibold">{forecast.current.humidity}%</p>
+                  <p className="text-2xl font-semibold">{forecast.current.condition}</p>
+               </div>
+               
+               <div className="lg:col-span-8 grid grid-cols-1 sm:grid-cols-3 gap-8">
+                  <div className="flex flex-col gap-1">
+                    <div className="flex items-center gap-2 text-white/70 mb-1">
+                      <Droplets size={18} />
+                      <span className="text-xs font-bold uppercase">Humidity</span>
+                    </div>
+                    <span className="text-2xl font-bold">{forecast.current.humidity}%</span>
                   </div>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Wind size={24} />
-                  <div>
-                    <p className="text-sm text-black">Wind</p>
-                    <p className="text-xl font-semibold">{forecast.current.windSpeed} km/h</p>
+                  <div className="flex flex-col gap-1">
+                    <div className="flex items-center gap-2 text-white/70 mb-1">
+                      <Wind size={18} />
+                      <span className="text-xs font-bold uppercase">Wind Speed</span>
+                    </div>
+                    <span className="text-2xl font-bold">{forecast.current.windSpeed} km/h</span>
                   </div>
-                </div>
-              </div>
-              <div className="flex items-center gap-2">
-                <Thermometer size={24} />
-                <div>
-                  <p className="text-sm text-black">Pressure</p>
-                  <p className="text-xl font-semibold">{forecast.current.pressure} hPa</p>
-                </div>
-              </div>
-            </div>
+                  <div className="flex flex-col gap-1">
+                    <div className="flex items-center gap-2 text-white/70 mb-1">
+                      <Thermometer size={18} />
+                      <span className="text-xs font-bold uppercase">Pressure</span>
+                    </div>
+                    <span className="text-2xl font-bold">{forecast.current.pressure} hPa</span>
+                  </div>
+               </div>
+             </div>
           </CardContent>
         </Card>
 
-        {/* Forecast Days */}
-        <div className="forecast-grid grid grid-cols-2 md:grid-cols-5 gap-4 mb-6">
+        {/* Forecast Selector */}
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 mb-10">
           {forecast.forecast.map((day, idx) => {
             const Icon = getWeatherIcon(day.condition);
+            const active = selectedDay === idx;
             return (
               <button
                 key={idx}
                 onClick={() => setSelectedDay(idx)}
-                className={`forecast-day p-4 rounded-xl transition-all ${
-                  selectedDay === idx
-                    ? 'bg-gradient-to-br from-blue-500 to-indigo-600 text-white shadow-lg scale-105'
-                    : 'bg-white hover:bg-gray-50 border border-gray-200'
+                className={`flex flex-col items-center p-6 rounded-3xl transition-all duration-300 transform active:scale-95 ${
+                  active
+                    ? 'bg-white shadow-premium-lg border-2 border-primary-500 -translate-y-2'
+                    : 'bg-white/40 hover:bg-white border border-slate-100 hover:shadow-md'
                 }`}
               >
-                <p className="text-sm font-medium mb-2">{day.day}</p>
-                <Icon size={32} className="mx-auto mb-2" />
-                <p className="text-2xl font-bold">{day.temp}°C</p>
-                <p className={`text-xs mt-1 ${selectedDay === idx ? 'text-blue-100' : 'text-gray-600'}`}>
+                <p className={`text-sm font-bold mb-4 ${active ? 'text-primary-600' : 'text-slate-400'}`}>{day.day}</p>
+                <Icon size={40} className={`mb-4 transition-transform ${active ? 'text-primary-600 scale-110' : 'text-slate-500'}`} />
+                <p className={`text-2xl font-bold ${active ? 'text-soil-dark' : 'text-slate-600'}`}>{day.temp}°C</p>
+                <p className="text-[11px] mt-2 font-medium text-slate-400 truncate w-full text-center">
                   {day.condition}
                 </p>
               </button>
@@ -229,66 +199,74 @@ export default function WeatherForecast() {
           })}
         </div>
 
-        {/* Detailed Forecast */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Detailed Forecast - {selectedForecast.day}</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="details-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-              <div className="p-4 rounded-lg bg-gradient-to-br from-yellow-50 to-orange-50">
-                <div className="flex items-center gap-2 mb-2">
-                  <Thermometer size={20} className="text-orange-600" />
-                  <span className="font-semibold">Temperature</span>
-                </div>
-                <p className="text-2xl font-bold text-orange-700">{selectedForecast.temp}°C</p>
-              </div>
-              <div className="p-4 rounded-lg bg-gradient-to-br from-blue-50 to-indigo-50">
-                <div className="flex items-center gap-2 mb-2">
-                  <Droplets size={20} className="text-blue-600" />
-                  <span className="font-semibold">Humidity</span>
-                </div>
-                <p className="text-2xl font-bold text-blue-700">{selectedForecast.humidity}%</p>
-              </div>
-              <div className="p-4 rounded-lg bg-gradient-to-br from-gray-50 to-slate-50">
-                <div className="flex items-center gap-2 mb-2">
-                  <Wind size={20} className="text-gray-600" />
-                  <span className="font-semibold">Wind Speed</span>
-                </div>
-                <p className="text-2xl font-bold text-gray-700">{selectedForecast.windSpeed} km/h</p>
-              </div>
-              <div className="p-4 rounded-lg bg-gradient-to-br from-purple-50 to-pink-50">
-                <div className="flex items-center gap-2 mb-2">
-                  <CloudRain size={20} className="text-purple-600" />
-                  <span className="font-semibold">Rain Chance</span>
-                </div>
-                <p className="text-2xl font-bold text-purple-700">{selectedForecast.rainChance}%</p>
-              </div>
-            </div>
+        {/* Details Card */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
+           <Card className="lg:col-span-2 border-none shadow-premium-lg rounded-3xl overflow-hidden">
+              <CardHeader className="bg-slate-50 border-b border-slate-100 py-6">
+                <CardTitle className="text-xl font-bold text-soil-dark flex items-center gap-2">
+                  <Badge variant="outline" className="bg-white px-3 py-1 text-primary-600 border-primary-100">Details</Badge>
+                  {selectedForecast.day}'s Detailed Forecast
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="p-8">
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-10">
+                    {[
+                      { icon: <Thermometer size={20} className="text-orange-500" />, label: 'Temperature', value: `${selectedForecast.temp}°C`, color: 'bg-orange-50' },
+                      { icon: <Droplets size={20} className="text-blue-500" />, label: 'Humidity', value: `${selectedForecast.humidity}%`, color: 'bg-blue-50' },
+                      { icon: <Wind size={20} className="text-slate-500" />, label: 'Wind Speed', value: `${selectedForecast.windSpeed} km/h`, color: 'bg-slate-50' },
+                      { icon: <CloudRain size={20} className="text-indigo-500" />, label: 'Rain Chance', value: `${selectedForecast.rainChance}%`, color: 'bg-indigo-50' }
+                    ].map((stat, i) => (
+                      <div key={i} className="flex flex-col">
+                        <div className={`p-2.5 w-fit rounded-xl ${stat.color} mb-3`}>
+                          {stat.icon}
+                        </div>
+                        <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">{stat.label}</p>
+                        <p className="text-2xl font-black text-soil-dark">{stat.value}</p>
+                      </div>
+                    ))}
+                  </div>
 
-            {/* Farming Recommendations */}
-            <div className="mt-6 p-4 rounded-lg bg-gradient-to-br from-green-50 to-emerald-50 border border-green-200">
-              <h3 className="font-semibold text-green-800 mb-2">🌾 Farming Recommendations</h3>
-              <ul className="space-y-1 text-sm text-green-700">
-                {selectedForecast.rainChance > 50 && (
-                  <li>• Good time for irrigation and water management</li>
-                )}
-                {selectedForecast.temp > 30 && (
-                  <li>• High temperature - ensure adequate water supply</li>
-                )}
-                {selectedForecast.windSpeed > 15 && (
-                  <li>• Strong winds expected - secure crops and structures</li>
-                )}
-                {selectedForecast.humidity > 75 && (
-                  <li>• High humidity - monitor for fungal diseases</li>
-                )}
-                {selectedForecast.condition.toLowerCase().includes('sunny') && (
-                  <li>• Sunny weather - ideal for harvesting and field work</li>
-                )}
-              </ul>
-            </div>
-          </CardContent>
-        </Card>
+                  <div className="p-6 rounded-2xl bg-sage-50 border border-sage-200">
+                    <h3 className="font-bold text-sage-900 mb-4 flex items-center gap-2">
+                      <span className="text-xl">🌾</span> Farming Recommendations
+                    </h3>
+                    <ul className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      {[
+                        selectedForecast.rainChance > 50 && 'Ideal time for natural irrigation - check drainage.',
+                        selectedForecast.temp > 30 && 'Heat warning: High evaporation rates, water early/late.',
+                        selectedForecast.windSpeed > 15 && 'Wind warning: Secure loose assets and young plants.',
+                        selectedForecast.humidity > 75 && 'Fungal alert: High moisture, check for pest infestations.',
+                        selectedForecast.condition.toLowerCase().includes('sunny') && 'Harvest friendly: Perfect conditions for reaping and drying.'
+                      ].filter(Boolean).map((text, i) => (
+                        <li key={i} className="flex gap-3 text-sm text-sage-800 font-medium">
+                          <span className="text-sage-400 mt-0.5">•</span>
+                          {text}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+              </CardContent>
+           </Card>
+
+           <Card className="border-none shadow-premium-lg rounded-3xl bg-secondary-900 text-white overflow-hidden">
+              <CardContent className="p-8">
+                 <h3 className="text-lg font-bold mb-6 flex items-center gap-2">
+                    <span className="p-1.5 bg-secondary-700 rounded-lg"><Wind size={18} /></span>
+                    Agri-Insights
+                 </h3>
+                 <div className="space-y-6">
+                    <div className="border-l-2 border-secondary-700 pl-4 py-1">
+                       <p className="text-xs font-bold text-secondary-300 uppercase mb-1">Crop Tip</p>
+                       <p className="text-sm font-medium">With {selectedForecast.condition} condition, focus on soil health monitoring.</p>
+                    </div>
+                    <div className="border-l-2 border-secondary-700 pl-4 py-1">
+                       <p className="text-xs font-bold text-secondary-300 uppercase mb-1">Alert</p>
+                       <p className="text-sm font-medium">Maintain node moisture levels if humidity drops below 55%.</p>
+                    </div>
+                 </div>
+              </CardContent>
+           </Card>
+        </div>
       </div>
     </div>
   );

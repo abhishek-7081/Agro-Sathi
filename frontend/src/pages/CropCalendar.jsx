@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
 import { Badge } from '../components/ui/badge';
-import { Calendar, Sprout, Droplets, Sun, Wind } from 'lucide-react';
-import { useTranslation } from 'react-i18next';
+import { Calendar, Sprout, Droplets, Sun, Wind, ChevronRight } from 'lucide-react';
+import { useTranslation } from '../hooks/useTranslation';
 
 export default function CropCalendar() {
   const { t } = useTranslation();
@@ -53,143 +53,170 @@ export default function CropCalendar() {
     }));
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-emerald-50 py-8">
+    <div className="min-h-screen bg-gradient-to-br from-sage-50 via-white to-green-50 py-8 animate-fade-in">
       <div className="container mx-auto p-4">
-        <div className="mb-8">
-          <div className="flex items-center gap-3 mb-4">
-            <div className="p-3 rounded-full bg-gradient-to-br from-green-500 to-emerald-600">
-              <Calendar size={24} className="text-white" />
+        <div className="mb-10 animate-fade-in-up">
+          <div className="flex items-center gap-4 mb-4">
+            <div className="p-3.5 rounded-2xl bg-gradient-to-br from-green-600 to-green-800 shadow-agri">
+              <Calendar size={28} className="text-white" />
             </div>
             <div>
-              <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent">
+              <h1 className="text-4xl md:text-5xl font-bold text-soil-dark tracking-tight">
                 🌾 Crop Calendar
               </h1>
-              <p className="text-gray-600 text-lg">Plan your farming activities month by month</p>
+              <p className="text-slate-500 text-lg font-medium">Plan and optimize your farming cycle for {months[selectedMonth]}</p>
             </div>
           </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-12">
           {/* Month Selector */}
-          <Card className="lg:col-span-1">
-            <CardHeader>
-              <CardTitle>Select Month</CardTitle>
+          <Card className="lg:col-span-12 border-none shadow-premium-lg rounded-3xl overflow-hidden animate-fade-in">
+            <CardHeader className="bg-slate-50 border-b border-slate-100 py-6 px-8">
+              <CardTitle className="text-xl font-bold text-soil-dark uppercase tracking-wider text-sm">Select Farming Month</CardTitle>
             </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-3 gap-2">
+            <CardContent className="p-6">
+              <div className="flex flex-wrap gap-3 items-center justify-center">
                 {months.map((month, idx) => (
                   <button
                     key={idx}
                     onClick={() => setSelectedMonth(idx)}
-                    className={`p-3 rounded-lg text-sm font-medium transition-all ${
+                    className={`px-6 py-3 rounded-2xl text-sm font-bold transition-all duration-300 transform active:scale-95 ${
                       selectedMonth === idx
-                        ? 'bg-green-600 text-white shadow-lg scale-105'
-                        : 'bg-gray-100 hover:bg-gray-200'
+                        ? 'bg-primary-600 text-white shadow-agri-lg -translate-y-1'
+                        : 'bg-white border border-slate-200 text-slate-500 hover:border-primary-400 hover:text-primary-600'
                     }`}
                   >
-                    {month.slice(0, 3)}
+                    {month}
                   </button>
                 ))}
               </div>
             </CardContent>
           </Card>
 
-          {/* Crop Filter */}
-          <Card className="lg:col-span-1">
-            <CardHeader>
-              <CardTitle>Filter by Crop</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-2">
+          {/* Sidebar Filters */}
+          <div className="lg:col-span-4 space-y-6 animate-fade-in-up">
+            <Card className="border-none shadow-premium-lg rounded-3xl">
+              <CardHeader className="pb-2">
+                <CardTitle className="text-lg font-bold">Crop Filter</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-2">
                 <button
                   onClick={() => setSelectedCrop('all')}
-                  className={`w-full p-3 rounded-lg text-left transition-all ${
+                  className={`w-full flex items-center justify-between p-4 rounded-2xl font-bold transition-all ${
                     selectedCrop === 'all'
-                      ? 'bg-green-600 text-white'
-                      : 'bg-gray-100 hover:bg-gray-200'
+                      ? 'bg-primary-50 text-primary-700 ring-2 ring-primary-500/20'
+                      : 'hover:bg-slate-50 text-slate-500'
                   }`}
                 >
-                  All Crops
+                  <span>All Commodities</span>
+                  <ChevronRight size={18} />
                 </button>
                 {crops.map(crop => (
                   <button
                     key={crop.id}
                     onClick={() => setSelectedCrop(crop.id)}
-                    className={`w-full p-3 rounded-lg text-left transition-all ${
+                    className={`w-full flex items-center justify-between p-4 rounded-2xl font-bold transition-all ${
                       selectedCrop === crop.id
-                        ? 'bg-green-600 text-white'
-                        : 'bg-gray-100 hover:bg-gray-200'
+                        ? 'bg-primary-50 text-primary-700 ring-2 ring-primary-500/20'
+                        : 'hover:bg-slate-50 text-slate-500'
                     }`}
                   >
-                    {crop.name} <Badge className="ml-2">{crop.season}</Badge>
+                    <span>{crop.name}</span>
+                    <Badge variant="secondary" className="bg-slate-100 text-[10px]">{crop.season}</Badge>
                   </button>
                 ))}
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Current Month Info */}
-          <Card className="lg:col-span-1">
-            <CardHeader>
-              <CardTitle>Current Month: {months[selectedMonth]}</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                <div className="flex items-center gap-2">
-                  <Sun size={20} className="text-yellow-500" />
-                  <span className="text-sm">Average Temperature: 25-30°C</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Droplets size={20} className="text-blue-500" />
-                  <span className="text-sm">Rainfall: Moderate</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Wind size={20} className="text-gray-500" />
-                  <span className="text-sm">Humidity: 60-70%</span>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* Activities for Selected Month */}
-        <div className="mt-8">
-          <h2 className="text-2xl font-bold mb-4">Activities for {months[selectedMonth]}</h2>
-          {currentMonthActivities.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {currentMonthActivities.map((item, idx) => (
-                <Card key={idx} className="border-green-200">
-                  <CardHeader>
-                    <div className="flex items-center justify-between">
-                      <CardTitle className="text-lg">{item.crop}</CardTitle>
-                      <Badge className="bg-green-100 text-green-800">{item.season}</Badge>
-                    </div>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-2">
-                      {Object.entries(item.activities).map(([key, value]) => (
-                        <div key={key} className="flex items-start gap-2">
-                          <Sprout size={16} className="text-green-600 mt-1" />
-                          <div>
-                            <span className="font-semibold capitalize">{key}:</span>
-                            <span className="ml-2 text-gray-700">{value}</span>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-          ) : (
-            <Card>
-              <CardContent className="py-8 text-center text-gray-500">
-                No active crops for {months[selectedMonth]}. Select a different month or crop.
               </CardContent>
             </Card>
-          )}
+
+            <Card className="border-none shadow-premium-lg rounded-3xl bg-secondary-900 text-white">
+              <CardContent className="p-8">
+                 <div className="flex gap-4 mb-6">
+                    <Sun size={24} className="text-yellow-400" />
+                    <div>
+                       <p className="text-xs font-bold text-secondary-400 uppercase mb-1">Seasonal Outlook</p>
+                       <p className="font-bold text-xl">{months[selectedMonth]} Forecast</p>
+                    </div>
+                 </div>
+                 <div className="space-y-4">
+                    <div className="flex justify-between items-center p-3 rounded-xl bg-secondary-800/50">
+                       <span className="text-sm font-medium text-secondary-300">Avg Temp</span>
+                       <span className="font-bold">26-32°C</span>
+                    </div>
+                    <div className="flex justify-between items-center p-3 rounded-xl bg-secondary-800/50">
+                       <span className="text-sm font-medium text-secondary-300">Avg Rainfall</span>
+                       <span className="font-bold">Moderate</span>
+                    </div>
+                 </div>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Activities List */}
+          <div className="lg:col-span-8 space-y-6 animate-fade-in-up md:delay-100">
+             <div className="flex items-center justify-between mb-4 px-2">
+                <h2 className="text-2xl font-bold text-soil-dark underline decoration-primary-500 underline-offset-8">
+                  Activities for {months[selectedMonth]}
+                </h2>
+                <Badge className="bg-primary-100 text-primary-700 hover:bg-primary-100 border-none px-4 py-1.5 rounded-full font-bold">
+                  {currentMonthActivities.length} Tasks Identified
+                </Badge>
+             </div>
+
+             {currentMonthActivities.length > 0 ? (
+               <div className="grid grid-cols-1 gap-6">
+                 {currentMonthActivities.map((item, idx) => (
+                   <Card key={idx} className="border-none shadow-premium-lg rounded-3xl overflow-hidden hover:shadow-premium-xl transition-shadow group">
+                     <div className="flex flex-col md:flex-row h-full">
+                        <div className="md:w-1/3 bg-gradient-to-br from-primary-600 to-primary-800 p-8 flex flex-col justify-between text-white relative">
+                           <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
+                              <Sprout size={100} strokeWidth={1} />
+                           </div>
+                           <div className="relative z-10">
+                              <p className="text-xs font-bold uppercase tracking-widest text-primary-200 mb-2">{item.season}</p>
+                              <h3 className="text-3xl font-black">{item.crop}</h3>
+                           </div>
+                           <div className="relative z-10 p-2 bg-white/10 rounded-xl w-fit backdrop-blur-sm border border-white/5">
+                              <Droplets size={24} />
+                           </div>
+                        </div>
+                        <div className="md:w-2/3 p-8 bg-white">
+                           <div className="space-y-6">
+                              {Object.entries(item.activities).map(([key, value]) => (
+                                <div key={key} className="flex items-start gap-4">
+                                  <div className="p-2.5 rounded-xl bg-slate-50 text-primary-600 border border-slate-100 group-hover:bg-primary-50 transition-colors">
+                                     <ChevronRight size={18} />
+                                  </div>
+                                  <div>
+                                    <p className="text-xs font-black uppercase text-slate-400 mb-1 tracking-widest">{key}</p>
+                                    <p className="text-lg font-bold text-soil-dark leading-tight">{value}</p>
+                                  </div>
+                                </div>
+                              ))}
+                           </div>
+                        </div>
+                     </div>
+                   </Card>
+                 ))}
+               </div>
+             ) : (
+               <Card className="border-none shadow-premium-lg rounded-3xl py-20 bg-slate-50/50">
+                 <CardContent className="flex flex-col items-center justify-center text-center">
+                    <div className="p-6 rounded-3xl bg-slate-100 mb-6">
+                       <Dropdown size={48} className="text-slate-300" />
+                    </div>
+                    <p className="text-xl font-bold text-slate-400 max-w-sm">No specific activities found for this combination.</p>
+                    <button onClick={() => setSelectedCrop('all')} className="mt-6 text-primary-600 font-bold hover:underline">View all crops for {months[selectedMonth]}</button>
+                 </CardContent>
+               </Card>
+             )}
+          </div>
         </div>
       </div>
     </div>
   );
+}
+
+function Dropdown({ size, className }) {
+   return <Calendar size={size} className={className} />;
 }

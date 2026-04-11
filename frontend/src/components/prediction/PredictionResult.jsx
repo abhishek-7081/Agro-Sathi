@@ -2,7 +2,7 @@ import React from 'react';
 import { Button } from '../ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 import { Check, ArrowLeft, Sprout, Droplets, Bug } from 'lucide-react';
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from '../../hooks/useTranslation';
 
 export default function PredictionResult({ result, onBack }) {
     const { t } = useTranslation();

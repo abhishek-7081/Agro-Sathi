@@ -171,9 +171,43 @@ async function voiceAssistant(userId, audioBuffer, codec = 'wav') {
   return { transcript: (transcript || '').trim(), reply, audioBase64 };
 }
 
+/**
+ * Text translation using Sarvam AI (v1)
+ * @param {string} text 
+ * @param {string} targetLanguageCode - e.g. 'hi-IN', 'ta-IN'
+ * @param {string} [sourceLanguageCode] - default 'en-IN'
+ * @returns {Promise<string>} translated text
+ */
+async function translate(text, targetLanguageCode, sourceLanguageCode = 'en-IN') {
+  if (!text || !targetLanguageCode) throw new Error('Text and target language code are required');
+  
+  const res = await fetch(`${SARVAM_BASE}/translate`, {
+    method: 'POST',
+    headers: getHeaders(),
+    body: JSON.stringify({
+      input: text,
+      source_language_code: sourceLanguageCode,
+      target_language_code: targetLanguageCode,
+      model: 'sarvam-translate:v1'
+    }),
+  });
+
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    console.error('Sarvam translation error:', res.status, err);
+    throw new Error(err?.error?.message || 'Translation failed');
+  }
+
+  const data = await res.json();
+  const translatedText = data.translated_text || text;
+  return translatedText;
+}
+
 module.exports = {
   farmerAIAgent,
   speechToText,
   textToSpeech,
   voiceAssistant,
+  translate,
 };
+

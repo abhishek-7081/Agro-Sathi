@@ -1,5 +1,7 @@
+const tailwindAnimate = require("tailwindcss-animate");
+
 /** @type {import('tailwindcss').Config} */
-export default {
+module.exports = {
   darkMode: ["class"],
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
@@ -56,7 +58,6 @@ export default {
           800: '#4a3120',
           900: '#37251a',
         },
-        /* Warm neutral palette */
         cream: {
           50:  '#FEFCF8',
           100: '#FAF7F0',
@@ -78,7 +79,6 @@ export default {
           light: '#4A3C36',
           dark:  '#1C1512',
         },
-        /* Legacy colour aliases so existing component code still compiles */
         gold: {
           50:  '#fffbeb',
           100: '#fef3c7',
@@ -129,18 +129,19 @@ export default {
         'hero':    ['2.5rem',   { lineHeight: '1.25' }],
       },
       boxShadow: {
-        'agri':      '0 4px 16px -2px rgba(13, 115, 119, 0.14)',
-        'agri-lg':   '0 16px 48px -10px rgba(13, 115, 119, 0.22)',
-        'agri-glow': '0 0 24px rgba(245, 158, 11, 0.30)',
-        'earth':     '0 4px 14px 0 rgba(156, 107, 60, 0.15)',
-        'glass':     '0 8px 32px rgba(13, 115, 119, 0.08)',
-        'card-hover':'0 20px 48px -12px rgba(13, 115, 119, 0.20)',
-        'teal-glow': '0 0 30px rgba(13, 148, 136, 0.25)',
+        'agri':      '0 4px 20px -2px rgba(13, 115, 119, 0.12)',
+        'agri-lg':   '0 20px 50px -12px rgba(13, 115, 119, 0.18)',
+        'agri-glow': '0 0 25px rgba(245, 158, 11, 0.25)',
+        'earth':     '0 4px 15px 0 rgba(156, 107, 60, 0.12)',
+        'glass':     '0 8px 32px 0 rgba(31, 38, 135, 0.07)',
+        'card-hover':'0 30px 60px -12px rgba(13, 115, 119, 0.22)',
+        'teal-glow': '0 0 35px rgba(13, 148, 136, 0.20)',
+        'premium':   '0 10px 30px -5px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
       },
       borderRadius: {
-        'agri':    '12px',
-        'agri-lg': '16px',
-        'agri-xl': '22px',
+        'agri':    '14px',
+        'agri-lg': '20px',
+        'agri-xl': '28px',
       },
       backgroundImage: {
         'gradient-primary': 'linear-gradient(135deg, #0D7377 0%, #0D9488 55%, #52936A 100%)',
@@ -182,5 +183,5 @@ export default {
       },
     },
   },
-  plugins: [require("tailwindcss-animate")],
+  plugins: [tailwindAnimate],
 };

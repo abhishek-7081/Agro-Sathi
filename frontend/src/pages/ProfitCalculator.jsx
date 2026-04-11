@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { DollarSign, TrendingUp, AlertCircle, CheckCircle, Zap } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
 import { Button } from '../components/ui/button';
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from '../hooks/useTranslation';
 
 export default function ProfitCalculator() {
   const { t } = useTranslation();

@@ -1,16 +1,15 @@
 import { useState, useRef, useCallback } from 'react';
-import { Mic, MicOff, X, Loader2 } from 'lucide-react';
+import { Mic, MicOff, X, Loader2, Stars } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { sendVoiceMessage } from '../../services/ai.service';
+import { useTranslation } from '../../hooks/useTranslation';
 
-const TARGET_SAMPLE_RATE = 16000; // 16 kHz mono is ideal for speech APIs
+const TARGET_SAMPLE_RATE = 16000;
 
-/** Resample and mix to mono, then encode to 16-bit PCM WAV for Sarvam STT */
 function audioBufferToWavBlob(buffer) {
   const sampleRate = buffer.sampleRate;
   const numChannels = buffer.numberOfChannels;
   const length = buffer.length;
-  // Resample to TARGET_SAMPLE_RATE if needed and mix to mono
   const outLength = Math.round((length * TARGET_SAMPLE_RATE) / sampleRate);
   const mono = new Float32Array(outLength);
   for (let i = 0; i < outLength; i++) {
@@ -33,8 +32,8 @@ function audioBufferToWavBlob(buffer) {
   writeStr(8, 'WAVE');
   writeStr(12, 'fmt ');
   view.setUint32(16, 16, true);
-  view.setUint16(20, 1, true); // PCM
-  view.setUint16(22, 1, true); // mono
+  view.setUint16(20, 1, true);
+  view.setUint16(22, 1, true);
   view.setUint32(24, TARGET_SAMPLE_RATE, true);
   view.setUint32(28, TARGET_SAMPLE_RATE * 2, true);
   view.setUint16(32, 2, true);
@@ -52,6 +51,7 @@ function audioBufferToWavBlob(buffer) {
 
 export default function VoiceAssistant() {
   const { user } = useAuth();
+  const { t } = useTranslation();
   const [open, setOpen] = useState(false);
   const [recording, setRecording] = useState(false);
   const [canStop, setCanStop] = useState(false);
@@ -76,7 +76,7 @@ export default function VoiceAssistant() {
         stream.getTracks().forEach((t) => t.stop());
         const blob = new Blob(chunksRef.current, { type: 'audio/webm' });
         if (blob.size < 2000) {
-          setError('Recording too short. Speak for 2–3 seconds then tap Stop.');
+          setError(t('dashboard.voice.too_short'));
           return;
         }
         let base64;
@@ -102,7 +102,7 @@ export default function VoiceAssistant() {
           });
         }
         if (!base64) {
-          setError('Could not read recording');
+          setError('Read error');
           return;
         }
         setLoading(true);
@@ -115,7 +115,7 @@ export default function VoiceAssistant() {
             audio.play().catch(() => {});
           }
         } catch (err) {
-          setError(err.response?.data?.message || err.message || 'Voice request failed');
+          setError(err.response?.data?.message || err.message || 'Error');
         } finally {
           setLoading(false);
         }
@@ -126,9 +126,9 @@ export default function VoiceAssistant() {
       setCanStop(false);
       minRecordTimerRef.current = setTimeout(() => setCanStop(true), 2000);
     } catch (err) {
-      setError('Microphone access denied or unavailable');
+      setError('Microphone denied');
     }
-  }, []);
+  }, [t]);
 
   const stopRecording = useCallback(() => {
     if (minRecordTimerRef.current) {
@@ -147,82 +147,96 @@ export default function VoiceAssistant() {
 
   return (
     <>
-      {/* Floating button - bottom right */}
       <button
         type="button"
         onClick={() => setOpen((o) => !o)}
-        className="fixed bottom-6 right-6 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-br from-primary-600 to-primary-700 text-white shadow-agri hover:shadow-agri-lg hover:scale-105 active:scale-95 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-primary-400 focus:ring-offset-2"
-        aria-label="Open voice assistant"
+        className={`fixed bottom-8 right-8 z-[60] flex h-16 w-16 items-center justify-center rounded-2xl bg-primary-600 text-white shadow-premium-lg hover:shadow-premium-xl hover:scale-110 active:scale-95 transition-all duration-500 group ${open ? 'rotate-90' : ''}`}
       >
-        <Mic size={26} strokeWidth={2} />
+        <Mic size={28} className="group-hover:animate-pulse" />
       </button>
 
-      {/* Voice panel */}
       {open && (
-        <div className="fixed bottom-24 right-6 z-50 w-80 rounded-agri-lg border border-primary-100 bg-white shadow-agri-lg overflow-hidden animate-in fade-in slide-in-from-bottom-4 duration-300">
-          <div className="flex items-center justify-between px-4 py-3 border-b border-primary-100 bg-primary-50/50">
-            <span className="font-heading font-semibold text-bright-heading">Voice Assistant</span>
-            <button
-              type="button"
-              onClick={() => setOpen(false)}
-              className="p-1.5 rounded-lg text-bright-muted hover:bg-primary-100 hover:text-bright-body transition-colors"
-              aria-label="Close"
-            >
-              <X size={18} />
-            </button>
+        <div className="fixed bottom-28 right-8 z-[60] w-96 rounded-3xl bg-white shadow-premium-xl border border-slate-100 overflow-hidden animate-fade-in-up">
+          <div className="bg-primary-600 p-6 text-white relative">
+            <div className="absolute top-0 right-0 p-4 opacity-10">
+               <Stars size={60} strokeWidth={1} />
+            </div>
+            <div className="flex items-center justify-between relative z-10">
+              <span className="text-sm font-black uppercase tracking-widest">{t('dashboard.voice.title')}</span>
+              <button
+                onClick={() => setOpen(false)}
+                className="p-1 rounded-lg hover:bg-white/20 transition-colors"
+              >
+                <X size={20} />
+              </button>
+            </div>
+            <p className="text-primary-100 text-xs mt-1 font-medium">{t('dashboard.voice.instruction')}</p>
           </div>
-          <div className="p-4 space-y-4">
+
+          <div className="p-8 space-y-6">
             {error && (
-              <p className="text-sm text-red-600 bg-red-50 border border-red-100 rounded-lg px-3 py-2">
+              <div className="p-4 rounded-xl bg-rose-50 border border-rose-100 text-rose-600 text-xs font-bold animate-shake">
                 {error}
-              </p>
+              </div>
             )}
+
             {result && (
-              <div className="space-y-2 text-sm">
+              <div className="space-y-4 animate-fade-in">
                 {result.transcript && (
-                  <p className="text-bright-muted">
-                    <span className="font-semibold text-bright-body">You: </span>
-                    {result.transcript}
-                  </p>
+                  <div className="flex flex-col gap-1">
+                    <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">{t('dashboard.voice.you')}</span>
+                    <p className="text-sm font-bold text-soil-dark bg-slate-50 p-3 rounded-2xl border border-slate-100">
+                      {result.transcript}
+                    </p>
+                  </div>
                 )}
                 {result.reply && (
-                  <p className="text-bright-body">
-                    <span className="font-semibold text-primary-600">Assistant: </span>
-                    {result.reply}
-                  </p>
+                  <div className="flex flex-col gap-1 items-end">
+                    <span className="text-[10px] font-black text-primary-500 uppercase tracking-widest">{t('dashboard.voice.assistant')}</span>
+                    <p className="text-sm font-bold text-white bg-primary-600 p-4 rounded-2xl shadow-premium rounded-tr-none">
+                      {result.reply}
+                    </p>
+                  </div>
                 )}
               </div>
             )}
-            <div className="flex flex-col items-center gap-3">
+
+            <div className="flex flex-col items-center gap-6">
               {loading ? (
-                <div className="flex items-center gap-2 text-bright-muted">
-                  <Loader2 size={24} className="animate-spin" />
-                  <span>Processing...</span>
+                <div className="flex flex-col items-center gap-3 py-4 text-primary-600">
+                  <Loader2 size={32} className="animate-spin" />
+                  <span className="text-xs font-black uppercase tracking-widest">{t('dashboard.voice.processing')}</span>
                 </div>
               ) : recording ? (
-                <button
-                  type="button"
-                  onClick={stopRecording}
-                  disabled={!canStop}
-                  className={`flex items-center gap-2 px-6 py-3 rounded-agri-lg font-semibold transition-colors ${canStop ? 'bg-red-500 text-white hover:bg-red-600' : 'bg-gray-300 text-gray-500 cursor-not-allowed'}`}
-                >
-                  <MicOff size={20} />
-                  {canStop ? 'Stop & send' : 'Speak... (2s)'}
-                </button>
+                <div className="flex flex-col items-center gap-4">
+                  <div className="relative">
+                    <div className="absolute inset-0 bg-rose-500 rounded-full animate-ping opacity-25" />
+                    <button
+                      onClick={stopRecording}
+                      disabled={!canStop}
+                      className={`relative z-10 flex h-20 w-20 items-center justify-center rounded-full transition-all duration-300 ${canStop ? 'bg-rose-500 text-white shadow-lg' : 'bg-slate-200 text-slate-400 cursor-not-allowed'}`}
+                    >
+                      <MicOff size={32} />
+                    </button>
+                  </div>
+                  <span className="text-xs font-black text-rose-500 uppercase tracking-widest animate-pulse">
+                    {canStop ? t('dashboard.voice.stop_and_send') : 'Speak... (2s)'}
+                  </span>
+                </div>
               ) : (
-                <button
-                  type="button"
-                  onClick={startRecording}
-                  className="flex items-center gap-2 px-6 py-3 rounded-agri-lg bg-gradient-to-r from-primary-600 to-primary-700 text-white font-semibold shadow-agri hover:shadow-agri-lg transition-all"
-                >
-                  <Mic size={20} />
-                  Tap to speak
-                </button>
+                <div className="flex flex-col items-center gap-4">
+                  <button
+                    onClick={startRecording}
+                    className="flex h-20 w-20 items-center justify-center rounded-full bg-primary-600 text-white shadow-premium-lg hover:shadow-premium-xl hover:scale-105 active:scale-95 transition-all duration-300 group"
+                  >
+                    <Mic size={32} className="group-hover:animate-pulse" />
+                  </button>
+                  <span className="text-xs font-black text-primary-600 uppercase tracking-widest">
+                    {t('dashboard.voice.tap_to_speak')}
+                  </span>
+                </div>
               )}
             </div>
-            <p className="text-xs text-bright-muted text-center">
-              Speak clearly for 2–3 seconds, then tap Stop. Ask about crops, weather, or schemes.
-            </p>
           </div>
         </div>
       )}

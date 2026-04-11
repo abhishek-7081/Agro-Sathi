@@ -36,3 +36,21 @@ exports.voice = async (req, res, next) => {
     next(error);
   }
 };
+
+/**
+ * Handle on-the-fly translation requests.
+ */
+exports.translate = async (req, res, next) => {
+  try {
+    const { text, targetLang, sourceLang = 'en-IN' } = req.body;
+
+    if (!text || !targetLang) {
+      return res.status(400).json({ message: 'Text and Target Language are required' });
+    }
+
+    const translatedText = await aiService.translate(text, targetLang, sourceLang);
+    res.json({ translatedText });
+  } catch (error) {
+    next(error);
+  }
+};

@@ -5,7 +5,7 @@ import PriceChart from '../components/market/PriceChart';
 import FilterBar from '../components/market/FilterBar';
 import Loader from '../components/ui/loader';
 import { TrendingUp, TrendingDown, RefreshCw } from 'lucide-react';
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from '../hooks/useTranslation';
 
 export default function Markets() {
   const { t } = useTranslation();

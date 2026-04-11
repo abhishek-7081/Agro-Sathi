@@ -1,0 +1,8 @@
+﻿
+> smart-agri-frontend@1.0.0 build
+> vite build
+
+[36mvite v4.5.14 [32mbuilding for production...[36m[39m
+transforming...
+[32mΓ£ô[39m 2293 modules transformed.
+[32mΓ£ô built in 4.32s[39m

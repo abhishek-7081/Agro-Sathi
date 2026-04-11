@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { MessageSquare, Search, Plus, Heart, MessageCircle, Eye } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
 import { Button } from '../components/ui/button';
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from '../hooks/useTranslation';
 
 export default function CommunityForum() {
   const { t } = useTranslation();
