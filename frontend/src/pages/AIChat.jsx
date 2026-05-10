@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { sendMessage } from '../services/ai.service';
+import { sendMessage, sendVoiceMessage } from '../services/ai.service';
 import ChatMessage from '../components/ai/ChatMessage';
 import ChatInput from '../components/ai/ChatInput';
 import QuickActions from '../components/ai/QuickActions';
@@ -69,6 +69,48 @@ export default function AIChat() {
     }
   };
 
+  const handleVoiceSend = async (base64Audio, contentType) => {
+    setLoading(true);
+    // Temporary user message indicating a voice message is being processed
+    const tempUserMsg = { role: 'user', content: '🎙️ Processing voice message...', timestamp: new Date() };
+    setMessages(prev => [...prev, tempUserMsg]);
+
+    try {
+      const response = await sendVoiceMessage(base64Audio, contentType);
+      
+      // Replace temp message with actual transcript
+      setMessages(prev => {
+        const newMsgs = [...prev];
+        newMsgs[newMsgs.length - 1] = { role: 'user', content: response.transcript || '🎙️ Voice Message', timestamp: new Date() };
+        return newMsgs;
+      });
+
+      const reply = response.reply || 'Voice processed successfully.';
+      const aiMessage = {
+        role: 'assistant',
+        content: typeof reply === 'string' ? reply : JSON.stringify(reply),
+        timestamp: new Date()
+      };
+      setMessages(prev => [...prev, aiMessage]);
+
+      if (response.audioBase64) {
+        const audio = new Audio(`data:audio/wav;base64,${response.audioBase64}`);
+        audio.play().catch(e => console.error('Audio play error', e));
+      }
+    } catch (error) {
+      console.error('AI Voice Chat error:', error);
+      let errorMessage = t('ai_chat.error_message') || 'Sorry, I encountered an error.';
+      const errorMsg = { role: 'assistant', content: errorMessage, timestamp: new Date() };
+      setMessages(prev => {
+        const newMsgs = [...prev];
+        newMsgs[newMsgs.length - 1] = { role: 'user', content: '🎙️ Failed to process voice', timestamp: new Date() };
+        return [...newMsgs, errorMsg];
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-cream-50 py-10 relative animate-fade-in overflow-hidden">
       {/* Background decorations */}
@@ -131,7 +173,7 @@ export default function AIChat() {
 
           <div className="p-4 sm:p-6 bg-white border-t border-slate-50 relative z-20">
             <div className="max-w-4xl mx-auto">
-               <ChatInput onSend={handleSend} disabled={loading} />
+               <ChatInput onSend={handleSend} onVoiceSend={handleVoiceSend} disabled={loading} />
             </div>
           </div>
         </div>
