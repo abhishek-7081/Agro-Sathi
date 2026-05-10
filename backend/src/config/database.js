@@ -1,7 +1,7 @@
-const mongoDatabase = require('./mongoDatabase');
+const mockDatabase = require('./mockDatabase');
 
-// We are exporting the mongoDatabase wrapper under the name 'supabase'
-// to maintain compatibility with all services and controllers.
-const supabase = mongoDatabase;
+// We are exporting the mockDatabase wrapper under the name 'supabase'
+// to restore full functionality since MongoDB is not running locally.
+const supabase = mockDatabase;
 
 module.exports = { supabase };
