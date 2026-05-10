@@ -44,6 +44,11 @@ export default function AIChat() {
     prevLengthRef.current = messages.length;
   }, [messages]);
 
+  const stripThinkTags = (text) => {
+    if (typeof text !== 'string') return text;
+    return text.replace(/<think>[\s\S]*?<\/think>/gi, '').trim();
+  };
+
   const handleSend = async (text) => {
     if (!text.trim()) return;
     const userMessage = { role: 'user', content: text, timestamp: new Date() };
@@ -52,7 +57,10 @@ export default function AIChat() {
 
     try {
       const response = await sendMessage(text);
-      const reply = response.reply || response.message || response;
+      let reply = response.reply || response.message || response;
+      if (typeof reply === 'string') {
+        reply = stripThinkTags(reply);
+      }
       const aiMessage = {
         role: 'assistant',
         content: typeof reply === 'string' ? reply : JSON.stringify(reply),
@@ -85,7 +93,10 @@ export default function AIChat() {
         return newMsgs;
       });
 
-      const reply = response.reply || 'Voice processed successfully.';
+      let reply = response.reply || 'Voice processed successfully.';
+      if (typeof reply === 'string') {
+        reply = stripThinkTags(reply);
+      }
       const aiMessage = {
         role: 'assistant',
         content: typeof reply === 'string' ? reply : JSON.stringify(reply),
