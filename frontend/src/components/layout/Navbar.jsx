@@ -74,7 +74,7 @@ export default function Navbar() {
             })}
           </div>
 
-          <div className="hidden xl:flex items-center gap-3">
+          <div className="hidden xl:flex items-center gap-1">
             <ThemeToggle />
             <LanguageSelector />
 

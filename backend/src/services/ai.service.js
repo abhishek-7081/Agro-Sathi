@@ -159,15 +159,19 @@ async function textToSpeech(text, targetLanguageCode = 'en-IN') {
  * @returns {Promise<{ transcript: string, reply: string, audioBase64: string }>}
  */
 async function voiceAssistant(userId, audioBuffer, codec = 'wav') {
-  const { transcript, language_code } = await speechToText(audioBuffer, codec);
-  const lang = (language_code || 'en-IN').startsWith('hi') ? 'hi-IN' : 'en-IN';
+  const { transcript } = await speechToText(audioBuffer, codec);
   let reply;
   if (!transcript || !transcript.trim()) {
     reply = "I didn't catch that. Please speak clearly for 2–3 seconds and try again.";
   } else {
     reply = await farmerAIAgent(userId, transcript.trim());
   }
-  const audioBase64 = await textToSpeech(reply, lang);
+  
+  // Detect if the reply contains Hindi Devanagari characters
+  const isHindi = /[\u0900-\u097F]/.test(reply);
+  const ttsLang = isHindi ? 'hi-IN' : 'en-IN';
+  
+  const audioBase64 = await textToSpeech(reply, ttsLang);
   return { transcript: (transcript || '').trim(), reply, audioBase64 };
 }
 
