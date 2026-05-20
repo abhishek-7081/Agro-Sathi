@@ -12,6 +12,7 @@ A comprehensive, multilingual platform designed to empower farmers with real-tim
 - **Government Schemes**: A directory of accessible government agricultural schemes and subsidies.
 - **Crop Calendar & Tracking**: Manage crop cycles, tracking planting, growing, and harvesting stages.
 - **Profit Calculator**: Tools to estimate crop profitability based on yield, market price, and input costs.
+- **Plant Disease Detection**: Upload a plant or leaf image and run the trained disease classifier from the app.
 - **Community Forum**: A discussion board for farmers and experts to share knowledge and ask questions.
 - **Multilingual Support**: Dynamic translation across the app for accessibility in various regional languages.
 - **Dynamic Theming**: Support for Light, Dark, and a customized "Green" nature-inspired theme.
@@ -60,6 +61,7 @@ The project follows a standard decoupled **MERN stack** architecture (MongoDB, E
 - `/alerts`: System alerts and Twilio notifications.
 - `/forum`: Community posts, comments, and upvotes.
 - `/profit-calculator`: Endpoints supporting crop profitability logic.
+- `/ml`: Plant disease model health checks and prediction endpoints.
 - `/shipments`: Logistics tracking.
 - `/admin`: Dashboard metrics and admin management.
 - `/search`: Global search indexing across the app.
@@ -93,6 +95,10 @@ npm install
 # Install frontend dependencies
 cd ../frontend
 npm install
+
+# Install ML dependencies
+cd ..
+python -m pip install -r "Plant disease dettection/requirements.txt"
 ```
 
 ### 2. Environment Variables (.env)
@@ -128,20 +134,40 @@ The project uses MongoDB. By default, it connects to `mongodb://localhost:27017/
 - Ensure your MongoDB server is running locally.
 - On the first successful startup, the backend will auto-seed essential mock data (like initial `market_prices` and `schemes`) into the database if the collections are empty. This logic is handled in `backend/src/config/mongoDatabase.js`.
 
-### 4. Running the Project
+### 4. Train the Plant Disease Model
 
-**Start Backend Development Server:**
+The dataset archive should remain inside `Plant disease dettection`. After extraction, the training script can use the prepared dataset structure in the workspace.
+
+```bash
+python "Plant disease dettection/train_model.py"
+```
+
+This generates:
+- `Plant disease dettection/trained_plant_disease_model.keras`
+- `Plant disease dettection/model_metadata.json`
+- `Plant disease dettection/training_history_runtime.json`
+
+### 5. Running the Project
+
+**Recommended Windows startup for the complete app:**
+```bash
+powershell -ExecutionPolicy Bypass -File .\start-smart-agri.ps1 -RebuildFrontend
+```
+
+This starts:
+- Frontend: `http://127.0.0.1:3000`
+- Backend API: `http://127.0.0.1:5000/api/v1`
+- ML service: `http://127.0.0.1:8008`
+
+To stop everything:
+```bash
+powershell -ExecutionPolicy Bypass -File .\stop-smart-agri.ps1
+```
+
+**Manual development mode:**
 ```bash
 cd backend
 npm run dev
-# Server will start on http://localhost:5000
-```
-
-**Start Frontend Development Server:**
-```bash
-cd frontend
-npm run dev
-# App will start on http://localhost:3000
 ```
 
 ---

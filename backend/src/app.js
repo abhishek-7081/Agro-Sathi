@@ -21,6 +21,7 @@ const profitCalculatorRoutes = require('./routes/profit-calculator.routes');
 const forumRoutes = require('./routes/forum.routes');
 const cropTradeRoutes = require('./routes/cropTrade.routes');
 const adminRoutes = require('./routes/admin.routes');
+const plantDiseaseRoutes = require('./routes/plantDisease.routes');
 
 const app = express();
 
@@ -67,6 +68,7 @@ app.use(`${apiPrefix}/weather`, weatherRoutes);
 app.use(`${apiPrefix}/crop`, cropRoutes);
 app.use(`${apiPrefix}/crop-trade`, cropTradeRoutes);
 app.use(`${apiPrefix}/admin`, adminRoutes);
+app.use(`${apiPrefix}/ml`, plantDiseaseRoutes);
 
 // 404 handler
 app.use((req, res) => {

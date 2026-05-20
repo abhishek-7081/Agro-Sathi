@@ -4,7 +4,7 @@ const app = require('./app');
 const logger = require('./utils/logger');
 const { startMarketPriceService } = require('../scripts/fetchMarketPrices');
 
-const PORT = process.env.PORT || 5002;
+const PORT = process.env.PORT || 5000;
 const NODE_ENV = process.env.NODE_ENV || 'development';
 
 const { startMonitor } = require('./jobs/priceMonitor');

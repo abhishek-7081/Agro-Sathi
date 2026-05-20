@@ -101,6 +101,7 @@
     "view_all": "View All",
     "features_title": "Platform Features",
     "yield_prediction": "Yield Prediction",
+    "plant_disease_detection": "Plant Disease Detection",
     "crop_market": "Crop Market",
     "shipments": "Logistics & Shipments",
     "profit_calc": "Profit Calculator",
@@ -303,26 +304,26 @@
     "copyright": "© 2025 Smart Agricultural Intelligence Platform. All rights reserved."
   },
   "prediction": {
-    "title": "Smart-Agri",
-    "subtitle": "Advanced crop yield prediction based on soil and environmental data",
-    "form_title": "Crop Yield Prediction",
-    "form_subtitle": "Please enter your crop and land details",
+    "title": "Plant Disease Detection",
+    "subtitle": "Upload a crop or leaf image and run the trained disease classifier inside Smart Agriculture.",
+    "form_title": "Plant Disease Detection",
+    "form_subtitle": "Upload a crop or leaf image to get a disease prediction and suggested next steps.",
     "crop_type": "Crop Type",
     "select_crop": "Select Crop",
     "land_area": "Land Area (in acres)",
     "enter_land_area": "Ex: 5",
     "soil_type": "Soil Type",
     "select_soil": "Select Soil",
-    "predict_button": "Predict Yield",
-    "predicting": "Calculating...",
-    "how_to_use": "📘 How to Use",
-    "how_to_use_desc": "Smart-Agri tool helps farmers make informed decisions based on weather, soil, and data.",
-    "step_1": "Select Crop – e.g., Wheat, Rice, Maize, etc.",
-    "step_2": "Enter Land Area – in acres.",
-    "step_3": "Select Soil Type – according to your land.",
-    "step_4": "Predict – and get instant suggestions.",
-    "result_title": "Predicted Result",
-    "predicted_yield": "Predicted Yield",
+    "predict_button": "Detect Disease",
+    "predicting": "Analyzing...",
+    "how_to_use": "How to Use",
+    "how_to_use_desc": "Upload a clear image of a crop leaf or plant part to get the model prediction and next-step guidance.",
+    "step_1": "Upload a clear crop or leaf image.",
+    "step_2": "Run the prediction.",
+    "step_3": "Review the top disease matches and confidence score.",
+    "step_4": "Use the recommendations as a quick field guide.",
+    "result_title": "Prediction Result",
+    "predicted_yield": "Predicted Disease",
     "recommendations": "Recommendations",
     "go_back": "Go Back",
     "quintal": "Quintal",
@@ -343,5 +344,9 @@
       "silty": "Silty",
       "peaty": "Peaty"
     }
+  },
+  "ml_button": {
+    "label": "Plant Disease Detection",
+    "tooltip": "Open plant disease detection"
   }
 }

@@ -1,6 +1,7 @@
 const { MongoClient, ObjectId } = require('mongodb');
+require('dotenv').config();
 
-const uri = "mongodb://localhost:27017";
+const uri = process.env.VITE_MONGODB_URI;
 const dbName = "smart_agri";
 const client = new MongoClient(uri);
 
@@ -10,7 +11,7 @@ async function connectToMongo() {
   try {
     await client.connect();
     db = client.db(dbName);
-    console.log('✓ Using MongoDB database at mongodb://localhost:27017/smart_agri');
+    console.log('✓ Using MongoDB database at ' + uri);
     
     // Auto-seed data if empty
     await seedDataIfEmpty();

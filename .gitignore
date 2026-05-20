@@ -5,6 +5,13 @@ docker-compose.yml
 dist/
 build/
 .DS_Store
+pd/
+Plant disease dettection/dataset/
+Plant disease dettection/trained_plant_disease_model.keras
+Plant disease dettection/model_metadata.json
+Plant disease dettection/training_history_runtime.json
+run-logs/
+__pycache__/
 
 *.env
 .env
@@ -16,3 +23,8 @@ build/
 .vscode/
 *.sublime-project
 
+archive/
+archive.zip
+dataset/
+pd/
+# Plant disease dettection/

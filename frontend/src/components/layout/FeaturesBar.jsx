@@ -21,7 +21,7 @@ export default function FeaturesBar() {
         { to: '/schemes', label: t('common.schemes'), icon: Sprout },
         { to: '/alerts', label: t('common.alerts'), icon: Bell },
         { to: '/weather-forecast', label: t('nav.weather'), icon: CloudSun },
-        { to: '/prediction', label: t('dashboard.yield_prediction'), icon: TrendingUp },
+        { to: '/prediction', label: t('dashboard.plant_disease_detection'), icon: TrendingUp },
         { to: '/crop-market', label: t('dashboard.crop_market'), icon: ShoppingBag },
         { to: '/shipments', label: t('dashboard.shipments'), icon: Truck },
         { to: '/profit-calculator', label: t('dashboard.profit_calc'), icon: DollarSign },

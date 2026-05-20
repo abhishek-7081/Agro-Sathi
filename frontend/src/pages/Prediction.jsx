@@ -1,42 +1,87 @@
 import { useState } from 'react';
-import { Search, ShieldCheck, UploadCloud } from 'lucide-react';
-import { useTranslation } from '../hooks/useTranslation';
+import { AlertCircle, Search, ShieldCheck, UploadCloud } from 'lucide-react';
 import PredictionForm from '../components/prediction/PredictionForm';
 import PredictionResult from '../components/prediction/PredictionResult';
+import { predictPlantDisease } from '../services/plantDisease.service';
+
+const MAX_IMAGE_SIDE = 768;
+const IMAGE_QUALITY = 0.9;
+
+function loadImage(file) {
+  return new Promise((resolve, reject) => {
+    const objectUrl = URL.createObjectURL(file);
+    const image = new Image();
+
+    image.onload = () => {
+      URL.revokeObjectURL(objectUrl);
+      resolve(image);
+    };
+
+    image.onerror = () => {
+      URL.revokeObjectURL(objectUrl);
+      reject(new Error('Unable to read the selected image.'));
+    };
+
+    image.src = objectUrl;
+  });
+}
+
+async function fileToOptimizedDataUrl(file) {
+  const image = await loadImage(file);
+  const scale = Math.min(1, MAX_IMAGE_SIDE / Math.max(image.width, image.height));
+  const width = Math.max(1, Math.round(image.width * scale));
+  const height = Math.max(1, Math.round(image.height * scale));
+
+  const canvas = document.createElement('canvas');
+  canvas.width = width;
+  canvas.height = height;
+
+  const context = canvas.getContext('2d');
+  if (!context) {
+    throw new Error('Image conversion is not supported in this browser.');
+  }
+
+  context.drawImage(image, 0, 0, width, height);
+  return canvas.toDataURL('image/jpeg', IMAGE_QUALITY);
+}
 
 export default function Prediction() {
-  const { t } = useTranslation();
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
 
-  const handlePredict = (formData) => {
+  const handlePredict = async (formData) => {
+    if (!formData.image) {
+      setError('Please upload a crop or leaf image before running a prediction.');
+      return;
+    }
+
     setLoading(true);
+    setError('');
 
-    setTimeout(() => {
-      const issueLabel = formData.image
-        ? 'Possible fungal leaf spot detected'
-        : `Yield outlook for ${formData.cropType}`;
-
-      setResult({
-        crop: formData.cropType,
-        growthStage: formData.growthStage,
-        landArea: formData.landArea,
-        soilType: formData.soilType,
-        notes: formData.notes,
-        imagePreview: formData.imagePreview || '',
-        issueLabel,
-        confidence: formData.image ? 91 : 86,
-        predictedYield: `${(Number(formData.landArea || 1) * 6.5).toFixed(2)} ${t('prediction.quintal')}`,
-        recommendations: [
-          t('prediction.rec_irrigation'),
-          t('prediction.rec_fertilizer'),
-          t('prediction.rec_pest'),
-          formData.image ? 'Inspect the affected leaves within 24 hours and remove heavily damaged parts.' : 'Monitor crop vigor weekly and compare growth with expected stage benchmarks.',
-        ],
+    try {
+      const imageBase64 = await fileToOptimizedDataUrl(formData.image);
+      const prediction = await predictPlantDisease({
+        imageBase64,
+        fileName: formData.image.name,
       });
 
+      setResult({
+        ...prediction,
+        imagePreview: formData.imagePreview || imageBase64,
+        notes: formData.notes?.trim() || '',
+      });
+    } catch (predictionError) {
+      const message =
+        predictionError.response?.data?.message ||
+        predictionError.message ||
+        'Prediction failed. Please make sure the backend and model are running.';
+
+      setError(message);
+      setResult(null);
+    } finally {
       setLoading(false);
-    }, 1200);
+    }
   };
 
   return (
@@ -46,13 +91,13 @@ export default function Prediction() {
           <div className="space-y-4">
             <div className="inline-flex items-center gap-2 rounded-full border theme-border theme-panel px-4 py-2 text-[11px] font-black uppercase tracking-[0.18em] theme-subtle">
               <Search size={14} className="text-primary-600" />
-              Crop Intelligence Workspace
+              Plant Health Workspace
             </div>
             <h1 className="text-4xl font-black uppercase tracking-tight theme-heading md:text-6xl">
-              {t('prediction.title')}
+              Plant Disease Detection
             </h1>
             <p className="max-w-2xl text-base leading-7 theme-subtle md:text-lg">
-              {t('prediction.subtitle')}
+              Upload a plant or leaf image to run the trained disease classifier directly from the Smart Agriculture app.
             </p>
           </div>
 
@@ -62,17 +107,28 @@ export default function Prediction() {
                 <UploadCloud size={20} />
               </div>
               <h2 className="text-sm font-black uppercase tracking-[0.16em] theme-heading">Upload + Analyze</h2>
-              <p className="mt-2 text-sm leading-6 theme-subtle">Add an image, crop details, and field notes in one smooth flow.</p>
+              <p className="mt-2 text-sm leading-6 theme-subtle">
+                Use the integrated model to classify crop diseases from a real image instead of the old mock result.
+              </p>
             </div>
             <div className="theme-panel rounded-[28px] p-5 shadow-premium-lg">
               <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-2xl bg-primary-600 text-white">
                 <ShieldCheck size={20} />
               </div>
               <h2 className="text-sm font-black uppercase tracking-[0.16em] theme-heading">Actionable Output</h2>
-              <p className="mt-2 text-sm leading-6 theme-subtle">Receive a quick diagnosis summary, confidence score, and next steps.</p>
+              <p className="mt-2 text-sm leading-6 theme-subtle">
+                See the predicted disease, model confidence, and next-step field recommendations in one place.
+              </p>
             </div>
           </div>
         </header>
+
+        {error ? (
+          <div className="flex items-start gap-3 rounded-[24px] border border-red-200 bg-red-50 px-5 py-4 text-sm text-red-700 shadow-sm">
+            <AlertCircle size={18} className="mt-0.5 flex-shrink-0" />
+            <p>{error}</p>
+          </div>
+        ) : null}
 
         {result ? (
           <PredictionResult result={result} onBack={() => setResult(null)} />

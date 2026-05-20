@@ -3,6 +3,7 @@ import { DollarSign, TrendingUp, AlertCircle, CheckCircle, Zap } from 'lucide-re
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
 import { Button } from '../components/ui/button';
 import { useTranslation } from '../hooks/useTranslation';
+import api from '../services/api';
 
 export default function ProfitCalculator() {
   const { t } = useTranslation();
@@ -33,25 +34,11 @@ export default function ProfitCalculator() {
     setError('');
 
     try {
-      const response = await fetch('http://localhost:5001/api/v1/profit-calculator/calculate', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        setError(data.errors?.[0] || data.message || 'Calculation failed');
-        setResult(null);
-      } else {
-        setResult(data.data);
-        setError('');
-      }
+      const { data } = await api.post('/profit-calculator/calculate', formData);
+      setResult(data.data);
+      setError('');
     } catch (err) {
-      setError('Error connecting to server. Make sure backend is running.');
+      setError(err.response?.data?.errors?.[0] || err.response?.data?.message || 'Error connecting to server. Make sure backend is running.');
       setResult(null);
     } finally {
       setLoading(false);
