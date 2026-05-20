@@ -1,17 +1,23 @@
 const { MongoClient, ObjectId } = require('mongodb');
-require('dotenv').config();
+const path = require('path');
+require('dotenv').config({ path: path.join(__dirname, '..', '..', '.env') });
 
 const uri = process.env.VITE_MONGODB_URI;
 const dbName = "smart_agri";
-const client = new MongoClient(uri);
 
+let client;
 let db;
 
 async function connectToMongo() {
+  if (!uri) {
+    console.error('⚠ Failed to connect to MongoDB: VITE_MONGODB_URI is not defined in environment variables.');
+    return;
+  }
   try {
+    client = new MongoClient(uri);
     await client.connect();
     db = client.db(dbName);
-    console.log('✓ Using MongoDB database at ' + uri);
+    console.log('✓ Connected to MongoDB database successfully');
     
     // Auto-seed data if empty
     await seedDataIfEmpty();
