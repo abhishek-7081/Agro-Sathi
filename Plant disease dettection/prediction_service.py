@@ -11,7 +11,7 @@ import tensorflow as tf
 from plant_disease_utils import DEFAULT_METADATA_PATH, DEFAULT_MODEL_PATH, decode_and_resize_image, load_metadata, prediction_payload
 
 
-HOST = "127.0.0.1"
+HOST = "https://agro-sathi.onrender.com"
 PORT = 8008
 
 metadata = load_metadata(DEFAULT_METADATA_PATH)
