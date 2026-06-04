@@ -1,0 +1,258 @@
+{
+  "classNames": [
+    "Apple___Apple_scab",
+    "Apple___Black_rot",
+    "Apple___Cedar_apple_rust",
+    "Apple___healthy",
+    "Blueberry___healthy",
+    "Cherry_(including_sour)___Powdery_mildew",
+    "Cherry_(including_sour)___healthy",
+    "Corn_(maize)___Cercospora_leaf_spot Gray_leaf_spot",
+    "Corn_(maize)___Common_rust_",
+    "Corn_(maize)___Northern_Leaf_Blight",
+    "Corn_(maize)___healthy",
+    "Grape___Black_rot",
+    "Grape___Esca_(Black_Measles)",
+    "Grape___Leaf_blight_(Isariopsis_Leaf_Spot)",
+    "Grape___healthy",
+    "Orange___Haunglongbing_(Citrus_greening)",
+    "Peach___Bacterial_spot",
+    "Peach___healthy",
+    "Pepper,_bell___Bacterial_spot",
+    "Pepper,_bell___healthy",
+    "Potato___Early_blight",
+    "Potato___Late_blight",
+    "Potato___healthy",
+    "Raspberry___healthy",
+    "Soybean___healthy",
+    "Squash___Powdery_mildew",
+    "Strawberry___Leaf_scorch",
+    "Strawberry___healthy",
+    "Tomato___Bacterial_spot",
+    "Tomato___Early_blight",
+    "Tomato___Late_blight",
+    "Tomato___Leaf_Mold",
+    "Tomato___Septoria_leaf_spot",
+    "Tomato___Spider_mites Two-spotted_spider_mite",
+    "Tomato___Target_Spot",
+    "Tomato___Tomato_Yellow_Leaf_Curl_Virus",
+    "Tomato___Tomato_mosaic_virus",
+    "Tomato___healthy"
+  ],
+  "imageSize": 128,
+  "batchSize": 32,
+  "epochsRequested": 7,
+  "epochsTrained": 7,
+  "trainSamples": 8360,
+  "validationSamples": 3040,
+  "trainLimitPerClass": 220,
+  "validLimitPerClass": 80,
+  "validationAccuracy": 70.1,
+  "validationLoss": 1.0029,
+  "testSet": {
+    "evaluated": 33,
+    "accuracy": 72.73,
+    "samples": [
+      {
+        "file": "AppleCedarRust1.JPG",
+        "expectedLabel": "Apple___Cedar_apple_rust",
+        "predictedLabel": "Apple___Cedar_apple_rust",
+        "confidence": 47.97
+      },
+      {
+        "file": "AppleCedarRust2.JPG",
+        "expectedLabel": "Apple___Cedar_apple_rust",
+        "predictedLabel": "Apple___Cedar_apple_rust",
+        "confidence": 36.78
+      },
+      {
+        "file": "AppleCedarRust3.JPG",
+        "expectedLabel": "Apple___Cedar_apple_rust",
+        "predictedLabel": "Apple___Cedar_apple_rust",
+        "confidence": 95.42
+      },
+      {
+        "file": "AppleCedarRust4.JPG",
+        "expectedLabel": "Apple___Cedar_apple_rust",
+        "predictedLabel": "Corn_(maize)___Cercospora_leaf_spot Gray_leaf_spot",
+        "confidence": 90.43
+      },
+      {
+        "file": "AppleScab1.JPG",
+        "expectedLabel": "Apple___Apple_scab",
+        "predictedLabel": "Grape___Black_rot",
+        "confidence": 32.29
+      },
+      {
+        "file": "AppleScab2.JPG",
+        "expectedLabel": "Apple___Apple_scab",
+        "predictedLabel": "Apple___Apple_scab",
+        "confidence": 53.27
+      },
+      {
+        "file": "AppleScab3.JPG",
+        "expectedLabel": "Apple___Apple_scab",
+        "predictedLabel": "Corn_(maize)___Cercospora_leaf_spot Gray_leaf_spot",
+        "confidence": 64.71
+      },
+      {
+        "file": "CornCommonRust1.JPG",
+        "expectedLabel": "Corn_(maize)___Common_rust_",
+        "predictedLabel": "Corn_(maize)___Common_rust_",
+        "confidence": 99.93
+      },
+      {
+        "file": "CornCommonRust2.JPG",
+        "expectedLabel": "Corn_(maize)___Common_rust_",
+        "predictedLabel": "Corn_(maize)___Common_rust_",
+        "confidence": 98.99
+      },
+      {
+        "file": "CornCommonRust3.JPG",
+        "expectedLabel": "Corn_(maize)___Common_rust_",
+        "predictedLabel": "Corn_(maize)___Common_rust_",
+        "confidence": 99.82
+      },
+      {
+        "file": "PotatoEarlyBlight1.JPG",
+        "expectedLabel": "Potato___Early_blight",
+        "predictedLabel": "Potato___Early_blight",
+        "confidence": 85.78
+      },
+      {
+        "file": "PotatoEarlyBlight2.JPG",
+        "expectedLabel": "Potato___Early_blight",
+        "predictedLabel": "Potato___Early_blight",
+        "confidence": 99.96
+      },
+      {
+        "file": "PotatoEarlyBlight3.JPG",
+        "expectedLabel": "Potato___Early_blight",
+        "predictedLabel": "Potato___healthy",
+        "confidence": 41.92
+      },
+      {
+        "file": "PotatoEarlyBlight4.JPG",
+        "expectedLabel": "Potato___Early_blight",
+        "predictedLabel": "Potato___Early_blight",
+        "confidence": 99.74
+      },
+      {
+        "file": "PotatoEarlyBlight5.JPG",
+        "expectedLabel": "Potato___Early_blight",
+        "predictedLabel": "Potato___Early_blight",
+        "confidence": 97.02
+      },
+      {
+        "file": "PotatoHealthy1.JPG",
+        "expectedLabel": "Potato___healthy",
+        "predictedLabel": "Potato___healthy",
+        "confidence": 93.19
+      },
+      {
+        "file": "PotatoHealthy2.JPG",
+        "expectedLabel": "Potato___healthy",
+        "predictedLabel": "Potato___healthy",
+        "confidence": 91.25
+      },
+      {
+        "file": "TomatoEarlyBlight1.JPG",
+        "expectedLabel": "Tomato___Early_blight",
+        "predictedLabel": "Tomato___Early_blight",
+        "confidence": 45.36
+      },
+      {
+        "file": "TomatoEarlyBlight2.JPG",
+        "expectedLabel": "Tomato___Early_blight",
+        "predictedLabel": "Tomato___Early_blight",
+        "confidence": 67.24
+      },
+      {
+        "file": "TomatoEarlyBlight3.JPG",
+        "expectedLabel": "Tomato___Early_blight",
+        "predictedLabel": "Tomato___Leaf_Mold",
+        "confidence": 61.23
+      },
+      {
+        "file": "TomatoEarlyBlight4.JPG",
+        "expectedLabel": "Tomato___Early_blight",
+        "predictedLabel": "Grape___Black_rot",
+        "confidence": 43.16
+      },
+      {
+        "file": "TomatoEarlyBlight5.JPG",
+        "expectedLabel": "Tomato___Early_blight",
+        "predictedLabel": "Tomato___Late_blight",
+        "confidence": 33.78
+      },
+      {
+        "file": "TomatoEarlyBlight6.JPG",
+        "expectedLabel": "Tomato___Early_blight",
+        "predictedLabel": "Tomato___Spider_mites Two-spotted_spider_mite",
+        "confidence": 75.39
+      },
+      {
+        "file": "TomatoHealthy1.JPG",
+        "expectedLabel": "Tomato___healthy",
+        "predictedLabel": "Tomato___healthy",
+        "confidence": 66.7
+      },
+      {
+        "file": "TomatoHealthy2.JPG",
+        "expectedLabel": "Tomato___healthy",
+        "predictedLabel": "Tomato___healthy",
+        "confidence": 66.1
+      },
+      {
+        "file": "TomatoHealthy3.JPG",
+        "expectedLabel": "Tomato___healthy",
+        "predictedLabel": "Tomato___healthy",
+        "confidence": 93.0
+      },
+      {
+        "file": "TomatoHealthy4.JPG",
+        "expectedLabel": "Tomato___healthy",
+        "predictedLabel": "Tomato___Target_Spot",
+        "confidence": 95.2
+      },
+      {
+        "file": "TomatoYellowCurlVirus1.JPG",
+        "expectedLabel": "Tomato___Tomato_Yellow_Leaf_Curl_Virus",
+        "predictedLabel": "Tomato___Tomato_Yellow_Leaf_Curl_Virus",
+        "confidence": 96.87
+      },
+      {
+        "file": "TomatoYellowCurlVirus2.JPG",
+        "expectedLabel": "Tomato___Tomato_Yellow_Leaf_Curl_Virus",
+        "predictedLabel": "Tomato___Tomato_Yellow_Leaf_Curl_Virus",
+        "confidence": 96.17
+      },
+      {
+        "file": "TomatoYellowCurlVirus3.JPG",
+        "expectedLabel": "Tomato___Tomato_Yellow_Leaf_Curl_Virus",
+        "predictedLabel": "Tomato___Tomato_Yellow_Leaf_Curl_Virus",
+        "confidence": 71.52
+      },
+      {
+        "file": "TomatoYellowCurlVirus4.JPG",
+        "expectedLabel": "Tomato___Tomato_Yellow_Leaf_Curl_Virus",
+        "predictedLabel": "Tomato___Tomato_Yellow_Leaf_Curl_Virus",
+        "confidence": 99.81
+      },
+      {
+        "file": "TomatoYellowCurlVirus5.JPG",
+        "expectedLabel": "Tomato___Tomato_Yellow_Leaf_Curl_Virus",
+        "predictedLabel": "Tomato___Tomato_Yellow_Leaf_Curl_Virus",
+        "confidence": 99.74
+      },
+      {
+        "file": "TomatoYellowCurlVirus6.JPG",
+        "expectedLabel": "Tomato___Tomato_Yellow_Leaf_Curl_Virus",
+        "predictedLabel": "Tomato___Tomato_Yellow_Leaf_Curl_Virus",
+        "confidence": 99.87
+      }
+    ]
+  },
+  "modelPath": "C:\\Users\\HP Victus\\Desktop\\Smart_Agriculture\\Plant disease dettection\\trained_plant_disease_model.keras",
+  "datasetRoot": "C:\\Users\\HP Victus\\Desktop\\Smart_Agriculture\\pd\\New Plant Diseases Dataset(Augmented)\\New Plant Diseases Dataset(Augmented)"
+}

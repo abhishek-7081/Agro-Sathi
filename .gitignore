@@ -7,9 +7,9 @@ build/
 .DS_Store
 pd/
 Plant disease dettection/dataset/
-Plant disease dettection/trained_plant_disease_model.keras
-Plant disease dettection/model_metadata.json
-Plant disease dettection/training_history_runtime.json
+# Plant disease dettection/trained_plant_disease_model.keras
+# Plant disease dettection/model_metadata.json
+# Plant disease dettection/training_history_runtime.json
 run-logs/
 __pycache__/
 
